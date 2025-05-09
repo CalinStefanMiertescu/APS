@@ -1,0 +1,536 @@
+.member-container {
+    padding: 2rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+}
+
+.member-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.member-title {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.member-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.member-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eee;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-item label {
+    display: block;
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.info-item p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.membership-info {
+    margin-bottom: 1.5rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.status-badge i {
+    margin-right: 0.5rem;
+}
+
+.status-badge.active {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    color: white;
+}
+
+.status-badge.inactive {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    color: white;
+}
+
+.expiry-info {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.expiry-info label {
+    display: block;
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.expiry-info p {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.progress {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    transition: width 0.3s ease;
+}
+
+.membership-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn i {
+    font-size: 1.1rem;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.alert-info {
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-footer {
+    border-top: 1px solid #eee;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #00b09b;
+    box-shadow: 0 0 0 0.2rem rgba(0, 176, 155, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #00b09b;
+    border-color: #00b09b;
+}
+
+@media (max-width: 768px) {
+    .member-container {
+        padding: 1rem;
+    }
+
+    .member-title {
+        font-size: 2rem;
+    }
+
+    .member-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .membership-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.member-profile-main {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-bg-light) 100%);
+}
+
+.card {
+    background-color: var(--dark-bg-light) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-effect);
+}
+
+.card-title {
+    color: var(--text-light);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: background-color var(--transition-speed);
+}
+
+.info-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.info-item label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.info-item p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.membership-info {
+    margin-bottom: 1.5rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.status-badge i {
+    margin-right: 0.5rem;
+}
+
+.status-badge.active {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    color: white;
+}
+
+.status-badge.inactive {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    color: white;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn i {
+    font-size: 1.1rem;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.alert-info {
+    background: rgba(0, 176, 155, 0.1);
+    color: #00b09b;
+}
+
+/* Modal Styles */
+.modal-content {
+    background-color: var(--dark-bg-light) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    color: white;
+    border-radius: 15px 15px 0 0;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #00b09b;
+    box-shadow: 0 0 0 0.2rem rgba(0, 176, 155, 0.25);
+    color: var(--text-light);
+}
+
+.form-check-input {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-check-input:checked {
+    background-color: #00b09b;
+    border-color: #00b09b;
+}
+
+.form-check-label {
+    color: var(--text-light);
+}
+
+/* Profile Picture */
+.profile-pic {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #00cfff;
+    border: 6px solid #00cfff;
+    box-shadow: 0 0 0 6px var(--dark-bg);
+    transition: transform var(--transition-speed);
+}
+
+.profile-pic:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .member-profile-main {
+        padding: 1rem !important;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Member Page Modal Styles */
+#memberPageModal .modal-content {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-bg-light) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#memberPageModal .modal-header {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    border-bottom: none;
+}
+
+#memberPageModal .modal-title {
+    color: white;
+    font-weight: 600;
+}
+
+#memberPageModal .card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+#memberPageModal .card-title {
+    color: var(--text-light);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#memberPageModal .alert {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+#memberPageModal .alert-success {
+    background: rgba(29, 201, 183, 0.1);
+    border-color: rgba(29, 201, 183, 0.2);
+    color: #1dc9b7;
+}
+
+#memberPageModal .alert-warning {
+    background: rgba(255, 197, 66, 0.1);
+    border-color: rgba(255, 197, 66, 0.2);
+    color: #ffc542;
+}
+
+#memberPageModal .profile-pic {
+    width: 150px !important;
+    height: 150px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--primary);
+    border: 6px solid var(--primary);
+    box-shadow: 0 0 0 6px var(--dark-bg);
+    transition: transform var(--transition-speed);
+}
+
+#memberPageModal .profile-pic:hover {
+    transform: scale(1.05);
+}
+
+#memberPageModal .text-info {
+    color: var(--primary) !important;
+}
+
+#memberPageModal .text-muted {
+    color: var(--sidebar-muted) !important;
+}
+
+#memberPageModal strong {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+#memberPageModal p {
+    color: var(--sidebar-text);
+    margin-bottom: 0.5rem;
+}
+
+#paypal-button-container {
+    margin-top: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #memberPageModal .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    #memberPageModal .row {
+        flex-direction: column;
+    }
+    
+    #memberPageModal .col-md-4 {
+        margin-bottom: 2rem;
+    }
+} 

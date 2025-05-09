@@ -1,0 +1,217 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using APS.Models;
+using APS.Models.ViewModels;
+using APS.Data;
+using System.Text.Json;
+
+namespace APS.Controllers
+{
+    [Authorize(Roles = "Admin")]
+    public class AdminController : Controller
+    {
+        private readonly APSContext _context;
+
+        public AdminController(APSContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index(string filterType = null, string filterPublication = null, string filterLocation = null)
+        {
+            var usersQuery = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterType))
+                usersQuery = usersQuery.Where(u => u.JournalistType == filterType);
+            if (!string.IsNullOrEmpty(filterPublication))
+                usersQuery = usersQuery.Where(u => u.Publication == filterPublication);
+            if (!string.IsNullOrEmpty(filterLocation))
+                usersQuery = usersQuery.Where(u => u.City == filterLocation);
+
+            var viewModel = new AdminDashboardViewModel
+            {
+                TotalMembersCount = await _context.Users.CountAsync(),
+                ActiveMembersCount = await _context.Users.CountAsync(u => u.IsActive && u.IsPayingMember),
+                PendingApprovalsCount = await _context.Users.CountAsync(u => !u.IsActive && !u.IsRejected),
+                NonPayingMembersCount = await _context.Users.CountAsync(u => !u.IsPayingMember),
+                PendingUsers = await _context.Users
+                    .Where(u => !u.IsActive && !u.IsRejected)
+                    .ToListAsync(),
+                UsersWithChanges = await _context.Users
+                    .Where(u => u.HasPendingChanges)
+                    .ToListAsync(),
+                ExpiringMemberships = await _context.Users
+                    .Where(u => u.IsPayingMember && u.MembershipExpiresAt.HasValue && 
+                           u.MembershipExpiresAt.Value <= DateTime.UtcNow.AddDays(30))
+                    .ToListAsync(),
+                JournalistTypes = await _context.Users
+                    .Select(u => u.JournalistType)
+                    .Distinct()
+                    .ToListAsync(),
+                Publications = await _context.Users
+                    .Select(u => u.Publication)
+                    .Distinct()
+                    .ToListAsync(),
+                ActiveMembers = await usersQuery.Where(u => u.IsActive && u.IsPayingMember).ToListAsync(),
+                NonPayingMembers = await usersQuery.Where(u => u.IsActive && !u.IsPayingMember).ToListAsync()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveUser(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.IsActive = true;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectUser(string userId, string reason)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.IsRejected = true;
+            user.RejectedAt = DateTime.UtcNow;
+            user.RejectionReason = reason;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveChanges(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null || string.IsNullOrEmpty(user.PendingChangesJson))
+            {
+                return NotFound();
+            }
+
+            var changes = JsonSerializer.Deserialize<Dictionary<string, object>>(user.PendingChangesJson);
+            foreach (var change in changes)
+            {
+                var property = typeof(User).GetProperty(change.Key);
+                if (property != null)
+                {
+                    property.SetValue(user, Convert.ChangeType(change.Value, property.PropertyType));
+                }
+            }
+
+            user.HasPendingChanges = false;
+            user.PendingChangesJson = null;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectChanges(string userId, string reason)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.HasPendingChanges = false;
+            user.PendingChangesJson = null;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddType(string type, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return BadRequest();
+            }
+
+            // For simplicity, we'll just add the type to the first user that doesn't have it
+            // In a real application, you'd want to store these in a separate table
+            var user = await _context.Users.FirstOrDefaultAsync();
+            if (user != null)
+            {
+                if (type == "journalist")
+                {
+                    user.JournalistType = value;
+                }
+                else if (type == "publication")
+                {
+                    user.Publication = value;
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteType(string type, string value)
+        {
+            // In a real application, you'd want to handle this differently
+            // For now, we'll just remove it from all users
+            var users = await _context.Users.ToListAsync();
+            foreach (var user in users)
+            {
+                if (type == "journalist" && user.JournalistType == value)
+                {
+                    user.JournalistType = null;
+                }
+                else if (type == "publication" && user.Publication == value)
+                {
+                    user.Publication = null;
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> InactivateMember(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.IsActive = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActivateMember(string userId, DateTime? until)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.IsActive = true;
+            if (until.HasValue)
+                user.MembershipExpiresAt = until;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+    }
+} 

@@ -1,0 +1,618 @@
+@model APS.Models.ViewModels.MemberDashboardViewModel
+@{
+    ViewData["Title"] = "Profil Membru";
+}
+<div class="container-fluid p-4" style="margin-left:0; min-height:100vh; background:linear-gradient(135deg,#0a192f 0%,#232b36 100%); font-family:'Segoe UI',Roboto,sans-serif;">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Navigation Buttons -->
+            <div class="d-flex justify-content-end mb-4 gap-3">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-landing-nav"><i class="fas fa-home me-1"></i> Landing Page</a>
+                <a href="@Url.Action("Announcements", "Home")" class="btn btn-landing-nav"><i class="fas fa-newspaper me-1"></i> News</a>
+            </div>
+            <!-- Top Profile Card -->
+            <div class="glass-card mb-5 p-4 d-flex flex-row align-items-center" style="border-radius: 2rem; box-shadow: 0 8px 32px #000a; width:100%;">
+                <div class="d-flex flex-column align-items-center justify-content-center" style="min-width:240px;">
+                    <form id="profilePicForm" enctype="multipart/form-data">
+                        <div class="profile-pic-upload" style="position:relative; display:inline-block;">
+                            <img id="mainProfilePic" src="@Model.ProfilePictureUrl ?? Url.Content("~/images/profile-placeholder.png")" class="profile-pic mb-3" style="width:160px; height:160px; border-radius:50%; object-fit:cover; background:#00cfff; border:6px solid #00cfff; box-shadow:0 0 24px #00cfff80,0 0 0 8px #232b36; transition:box-shadow 0.3s;" />
+                            <label for="profilePicInput" class="profile-pic-camera-btn">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input type="file" id="profilePicInput" name="profilePicture" accept="image/*" style="display:none;" />
+                        </div>
+                    </form>
+                </div>
+                <div class="flex-grow-1 ms-5 d-flex flex-column justify-content-center">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="fw-bold text-info" style="font-size:2.2rem; letter-spacing:1px;">@Model.FirstName @Model.LastName</span>
+                        <span class="badge ms-3" style="background:#1a8cff; color:#fff; font-size:1.1rem;">@Model.Role?.ToUpper()</span>
+                        @if (Model.IsPayingMember)
+                        {
+                            <span class="badge ms-2" style="background:#1ed760; color:#fff; font-size:1.1rem;">Membru activ</span>
+                        }
+                        else
+                        {
+                            <span class="badge ms-2" style="background:#e74c3c; color:#fff; font-size:1.1rem;">Membru inactiv</span>
+                        }
+                    </div>
+                    <div class="mb-2" style="color:#e0e6ed; font-size:1.15rem;">@Model.Biography</div>
+                    <a href="#" class="text-info" style="font-size:1.1rem; text-decoration:none;" onclick="editBio()"><i class="fas fa-edit"></i> Editează biografia</a>
+                </div>
+            </div>
+            <!-- Biography Card -->
+            <div class="glass-card mb-4 p-4" style="border-radius:1.5rem;">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-user-edit fa-lg me-2 text-info"></i>
+                    <h2 class="card-title mb-0" style="font-size:1.3rem;">Biografie</h2>
+                </div>
+                <div style="color:#e0e6ed; font-size:1.15rem;">@Model.Biography</div>
+                <a href="#" class="text-info mt-2 d-inline-block" style="font-size:1.1rem; text-decoration:none;" onclick="editBio()"><i class="fas fa-edit"></i> Editează biografia</a>
+            </div>
+            <!-- Cards Row -->
+            <div class="row g-4">
+                <!-- Personal Data Card -->
+                <div class="col-md-6">
+                    <div class="glass-card bg-secondary text-light shadow-sm h-100 p-4" style="border-radius:1.5rem;">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-id-card fa-lg me-2 text-info"></i>
+                            <h2 class="card-title mb-0" style="font-size:1.5rem;">Date personale</h2>
+                        </div>
+                        <div class="mb-3 d-flex align-items-center"><i class="fas fa-envelope me-2"></i><span class="fw-bold">Email</span><span class="ms-auto">@Model.Email</span></div>
+                        <div class="mb-3 d-flex align-items-center"><i class="fas fa-phone me-2"></i><span class="fw-bold">Telefon</span><span class="ms-auto">@Model.Phone</span></div>
+                        <div class="mb-3 d-flex align-items-center"><i class="fas fa-map-marker-alt me-2"></i><span class="fw-bold">Oraș</span><span class="ms-auto">@Model.City</span></div>
+                        <div class="mb-3 d-flex align-items-center"><i class="fas fa-newspaper me-2"></i><span class="fw-bold">Publicație</span><span class="ms-auto">@Model.Publication</span></div>
+                        <a href="#" class="text-info" style="font-size:1.1rem; text-decoration:none;" onclick="editProfile()"><i class="fas fa-edit"></i> Editează profilul</a>
+                        @if (Model.HasPendingChanges)
+                        {
+                            <div class="alert alert-info mt-3"><i class="fas fa-info-circle"></i> Modificările sunt în așteptarea aprobării de către un administrator.</div>
+                        }
+                    </div>
+                </div>
+                <!-- Membership Status Card -->
+                <div class="col-md-6">
+                    <div class="glass-card bg-secondary text-light shadow-sm h-100 p-4" style="border-radius:1.5rem;">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-crown fa-lg me-2 text-info"></i>
+                            <h2 class="card-title mb-0" style="font-size:1.5rem;">Status Abonament</h2>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge @(Model.IsPayingMember ? "bg-success" : "bg-danger")" style="font-size:1.1rem;">
+                                <i class="fas @(Model.IsPayingMember ? "fa-check-circle" : "fa-times-circle")"></i>
+                                @(Model.IsPayingMember ? "Membru activ" : "Membru inactiv")
+                            </span>
+                        </div>
+                        <div class="mb-3"><label>@(Model.IsPayingMember ? "Valabil până la" : "Expirat la")</label>: <b>@Model.MembershipExpiresAt?.ToString("dd MMMM yyyy")</b></div>
+                        <div class="progress mb-3" style="height: 10px; background:rgba(0,207,255,0.1);">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: @Model.MembershipProgress%; border-radius:8px;" aria-valuenow="@Model.MembershipProgress" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="spectacular-btn" onclick="extendMembership()"><i class="fas fa-calendar-plus"></i> Prelungire abonament</button>
+                            <button class="spectacular-btn" onclick="activateAutoRenewal()"><i class="fas fa-sync-alt"></i> Activează reînnoire automată</button>
+                            <button class="spectacular-btn danger" onclick="cancelMembership()"><i class="fas fa-user-times"></i> Renunță la abonament</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .glass-card {
+        background: radial-gradient(circle at 30% 30%, #232b36 70%, #1a2332 100%);
+        border: 1px solid #00cfff33;
+        box-shadow: 0 4px 32px #000a;
+    }
+    .btn-landing-nav {
+        background: rgba(0,207,255,0.08);
+        color: #00cfff;
+        border: 1px solid #00cfff;
+        border-radius: 1.5rem;
+        font-weight: 500;
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-landing-nav:hover {
+        background: #00cfff;
+        color: #0a192f;
+    }
+    .btn-modern {
+        border-radius: 1.5rem;
+        font-weight: 500;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px #00cfff22;
+        transition: background 0.2s, color 0.2s;
+    }
+    .profile-pic-upload {
+        position: relative;
+        display: inline-block;
+    }
+    .profile-pic-upload:hover .profile-pic {
+        box-shadow: 0 0 32px #00cfffcc, 0 0 0 8px #232b36;
+        filter: brightness(1.1);
+    }
+    .profile-pic-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        background: rgba(0,207,255,0.7);
+        border-radius: 50%;
+        padding: 0.5rem 0.7rem;
+        font-size: 1.5rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+    }
+    .profile-pic-upload:hover .profile-pic-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .spinner-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(10,25,47,0.6);
+        border-radius: 50%;
+        z-index: 10;
+    }
+    .modern-modal-content {
+        background: #232b36 !important;
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 32px #000a;
+        border: 1px solid #00cfff33;
+    }
+    .modern-modal-header {
+        background: linear-gradient(90deg, #1ed760 0%, #00cfff 100%);
+        color: #fff;
+        border-top-left-radius: 1.5rem;
+        border-top-right-radius: 1.5rem;
+        border-bottom: none;
+    }
+    .modern-modal-header .modal-title {
+        color: #fff;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    .modern-modal-footer {
+        border-top: none;
+        border-bottom-left-radius: 1.5rem;
+        border-bottom-right-radius: 1.5rem;
+        padding-bottom: 1.5rem;
+        padding-top: 1rem;
+    }
+    .modern-modal-content .form-control, .modern-modal-content .form-select {
+        background: #1a2332;
+        color: #fff;
+        border-radius: 0.75rem;
+        border: 1px solid #00cfff33;
+        box-shadow: none;
+    }
+    .modern-modal-content .form-control:focus, .modern-modal-content .form-select:focus {
+        border-color: #00cfff;
+        box-shadow: 0 0 0 2px #00cfff44;
+        background: #1a2332;
+        color: #fff;
+    }
+    .modern-modal-content label.form-label {
+        color: #00cfff;
+        font-weight: 500;
+    }
+    .modern-modal-footer .btn-info {
+        background: linear-gradient(90deg, #1ed760 0%, #00cfff 100%);
+        color: #fff;
+        border: none;
+        border-radius: 1.5rem;
+        font-weight: 600;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        transition: background 0.2s, color 0.2s;
+    }
+    .modern-modal-footer .btn-info:hover {
+        background: #00cfff;
+        color: #232b36;
+    }
+    .modern-modal-footer .btn-secondary {
+        border-radius: 1.5rem;
+        font-weight: 500;
+        background: #232b36;
+        color: #fff;
+        border: 1px solid #00cfff33;
+        transition: background 0.2s, color 0.2s;
+    }
+    .modern-modal-footer .btn-secondary:hover {
+        background: #1a2332;
+        color: #00cfff;
+    }
+    .spectacular-btn {
+        border: none;
+        border-radius: 2rem;
+        font-weight: 600;
+        font-size: 1.15rem;
+        padding: 0.75rem 2rem;
+        margin-bottom: 1rem;
+        color: #fff;
+        background: linear-gradient(90deg, #00cfff 0%, #1ed760 100%);
+        box-shadow: 0 2px 16px #00cfff44;
+        transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        outline: none;
+    }
+    .spectacular-btn:hover, .spectacular-btn:focus {
+        background: linear-gradient(90deg, #1ed760 0%, #00cfff 100%);
+        box-shadow: 0 0 24px #00cfffcc, 0 0 8px #1ed76099;
+        transform: scale(1.04);
+        color: #232b36;
+    }
+    .spectacular-btn.danger {
+        background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+        box-shadow: 0 2px 16px #ff416c44;
+    }
+    .spectacular-btn.danger:hover, .spectacular-btn.danger:focus {
+        background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
+        box-shadow: 0 0 24px #ff416ccc, 0 0 8px #ff4b2b99;
+        color: #fff;
+    }
+    .profile-pic-camera-btn {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        background: linear-gradient(135deg, #00cfff 60%, #1ed760 100%);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.5rem;
+        box-shadow: 0 2px 8px #00cfff55;
+        border: 3px solid #232b36;
+        cursor: pointer;
+        transition: box-shadow 0.2s, background 0.2s;
+        z-index: 2;
+    }
+    .profile-pic-camera-btn:hover {
+        box-shadow: 0 0 16px #00cfffcc, 0 0 8px #1ed76099;
+        background: linear-gradient(135deg, #1ed760 60%, #00cfff 100%);
+    }
+</style>
+<script>
+    function showPicSpinner() {
+        document.getElementById('picSpinner').style.display = 'flex';
+    }
+
+    function editBio() {
+        $('#editBioModal').modal('show');
+    }
+
+    function saveBio() {
+        const biography = $('#editBioForm textarea[name="Biography"]').val();
+        
+        $.ajax({
+            url: '@Url.Action("UpdateBiography", "Member")',
+            type: 'POST',
+            data: { biography: biography },
+            success: function() {
+                location.reload();
+            },
+            error: function() {
+                alert('A apărut o eroare la salvarea biografiei.');
+            }
+        });
+    }
+
+    function editProfile() {
+        $('#editProfileModal').modal('show');
+    }
+
+    function saveProfile() {
+        const form = $('#editProfileForm');
+        const formData = new FormData(form[0]);
+        
+        $.ajax({
+            url: '@Url.Action("UpdateProfile", "Member")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                location.reload();
+            },
+            error: function() {
+                alert('A apărut o eroare la salvarea profilului.');
+            }
+        });
+    }
+
+    function extendMembership() {
+        $('#extendMembershipModal').modal('show');
+    }
+
+    function processExtension() {
+        const form = $('#extendMembershipForm');
+        const formData = new FormData(form[0]);
+        
+        $.ajax({
+            url: '@Url.Action("ExtendMembership", "Member")',
+            type: 'POST',
+            data: {
+                duration: formData.get('Duration'),
+                autoRenew: formData.get('AutoRenew') === 'on'
+            },
+            success: function() {
+                location.reload();
+            },
+            error: function() {
+                alert('A apărut o eroare la procesarea prelungirii abonamentului.');
+            }
+        });
+    }
+
+    function cancelMembership() {
+        if (confirm('Sigur doriți să renunțați la abonament? Această acțiune nu poate fi anulată.')) {
+            $.ajax({
+                url: '@Url.Action("CancelMembership", "Member")',
+                type: 'POST',
+                success: function() {
+                    location.reload();
+                },
+                error: function() {
+                    alert('A apărut o eroare la anularea abonamentului.');
+                }
+            });
+        }
+    }
+
+    function activateAutoRenewal() {
+        if (confirm('Doriți să activați reînnoirea automată a abonamentului?')) {
+            $.ajax({
+                url: '@Url.Action("ActivateAutoRenewal", "Member")',
+                type: 'POST',
+                success: function() {
+                    location.reload();
+                },
+                error: function() {
+                    alert('A apărut o eroare la activarea reînnoirii automate.');
+                }
+            });
+        }
+    }
+
+    document.getElementById('profilePicInput').addEventListener('change', function() {
+        var formData = new FormData();
+        formData.append('profilePicture', this.files[0]);
+        fetch('/Member/UploadProfilePicture', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.querySelectorAll('.profile-pic').forEach(img => img.src = data.newProfilePictureUrl);
+                document.querySelectorAll('.profile-name').forEach(el => el.textContent = data.firstName + ' ' + data.lastName);
+            } else {
+                alert('Upload failed: ' + data.message);
+            }
+        });
+    });
+</script>
+<!-- Edit Bio Modal -->
+<div class="modal fade" id="editBioModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editează biografia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editBioForm">
+                    <textarea class="form-control" name="Biography" rows="5">@Model.Biography</textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                <button type="button" class="btn btn-primary" onclick="saveBio()">Salvează</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content modern-modal-content">
+            <div class="modal-header modern-modal-header">
+                <h5 class="modal-title">Editează Profilul</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="editProfileForm">
+                    <div class="mb-3">
+                        <label class="form-label">Prenume</label>
+                        <input type="text" class="form-control" name="FirstName" value="@Model.FirstName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nume</label>
+                        <input type="text" class="form-control" name="LastName" value="@Model.LastName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefon</label>
+                        <input type="tel" class="form-control" name="Phone" value="@Model.Phone">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Oraș</label>
+                        <input type="text" class="form-control" name="City" value="@Model.City">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tip Jurnalist</label>
+                        <select class="form-select" name="JournalistType">
+                            @foreach (var type in Model.AvailableJournalistTypes)
+                            {
+                                <option value="@type" selected="@(type == Model.JournalistType ? "selected" : null)">@type</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Publicație</label>
+                        <select class="form-select" name="Publication">
+                            @foreach (var pub in Model.AvailablePublications)
+                            {
+                                <option value="@pub" selected="@(pub == Model.Publication ? "selected" : null)">@pub</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer modern-modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                <button type="button" class="btn btn-info" onclick="saveProfile()">Salvează</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Extend Membership Modal -->
+<div class="modal fade" id="extendMembershipModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content modern-modal-content">
+            <div class="modal-header modern-modal-header">
+                <h5 class="modal-title">Prelungire Abonament</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="extendMembershipForm">
+                    <div class="mb-3">
+                        <label class="form-label">Durată</label>
+                        <select class="form-select" name="Duration">
+                            <option value="1">1 An</option>
+                            <option value="2">2 Ani</option>
+                            <option value="3">3 Ani</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="AutoRenew" id="autoRenew">
+                            <label class="form-check-label" for="autoRenew">
+                                Activează reînnoirea automată
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer modern-modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                <button type="button" class="btn btn-info" onclick="processExtension()">Continuă la Plată</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="~/css/member.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+}
+@section Scripts {
+    <script>
+        function editBio() {
+            $('#editBioModal').modal('show');
+        }
+
+        function saveBio() {
+            const biography = $('#editBioForm textarea[name="Biography"]').val();
+            
+            $.ajax({
+                url: '@Url.Action("UpdateBiography", "Member")',
+                type: 'POST',
+                data: { biography: biography },
+                success: function() {
+                    location.reload();
+                },
+                error: function() {
+                    alert('A apărut o eroare la salvarea biografiei.');
+                }
+            });
+        }
+
+        function editProfile() {
+            $('#editProfileModal').modal('show');
+        }
+
+        function saveProfile() {
+            const form = $('#editProfileForm');
+            const formData = new FormData(form[0]);
+            
+            $.ajax({
+                url: '@Url.Action("UpdateProfile", "Member")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    location.reload();
+                },
+                error: function() {
+                    alert('A apărut o eroare la salvarea profilului.');
+                }
+            });
+        }
+
+        function extendMembership() {
+            $('#extendMembershipModal').modal('show');
+        }
+
+        function processExtension() {
+            const form = $('#extendMembershipForm');
+            const formData = new FormData(form[0]);
+            
+            $.ajax({
+                url: '@Url.Action("ExtendMembership", "Member")',
+                type: 'POST',
+                data: {
+                    duration: formData.get('Duration'),
+                    autoRenew: formData.get('AutoRenew') === 'on'
+                },
+                success: function() {
+                    location.reload();
+                },
+                error: function() {
+                    alert('A apărut o eroare la procesarea prelungirii abonamentului.');
+                }
+            });
+        }
+
+        function cancelMembership() {
+            if (confirm('Sigur doriți să renunțați la abonament? Această acțiune nu poate fi anulată.')) {
+                $.ajax({
+                    url: '@Url.Action("CancelMembership", "Member")',
+                    type: 'POST',
+                    success: function() {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('A apărut o eroare la anularea abonamentului.');
+                    }
+                });
+            }
+        }
+
+        function activateAutoRenewal() {
+            if (confirm('Doriți să activați reînnoirea automată a abonamentului?')) {
+                $.ajax({
+                    url: '@Url.Action("ActivateAutoRenewal", "Member")',
+                    type: 'POST',
+                    success: function() {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('A apărut o eroare la activarea reînnoirii automate.');
+                    }
+                });
+            }
+        }
+    </script>
+} 

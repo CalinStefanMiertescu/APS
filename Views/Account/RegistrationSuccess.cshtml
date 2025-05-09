@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Registration Successful";
+}
+
+<div class="success-container">
+    <div class="success-card card">
+        <div class="card-body">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="success-title">@ViewData["Title"]</h2>
+            <div class="success-message">
+                <p>Your registration has been submitted successfully!</p>
+                <p>Please check your email for verification instructions.</p>
+                <p>Your account will be activated after approval by an administrator.</p>
+            </div>
+            <div class="mt-4">
+                <a asp-action="Login" class="btn btn-primary success-btn">Return to Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="~/css/registration-success.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+} 

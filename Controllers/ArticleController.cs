@@ -1,0 +1,412 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using APS.Models;
+using APS.Models.ViewModels;
+using APS.Data;
+using System.Security.Claims;
+
+namespace APS.Controllers
+{
+    public class ArticleController : Controller
+    {
+        private readonly APSContext _context;
+        private readonly IWebHostEnvironment _environment;
+
+        public ArticleController(APSContext context, IWebHostEnvironment environment)
+        {
+            _context = context;
+            _environment = environment;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var currentUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+
+            var articles = await _context.Articles
+                .Include(a => a.Author)
+                .Include(a => a.Images)
+                .Include(a => a.Comments)
+                .Where(a => a.IsPublished || (currentUser != null && (currentUser.IsAdmin || currentUser.IsModerator)))
+                .OrderByDescending(a => a.PublishedAt)
+                .ToListAsync();
+
+            var viewModel = new ArticleListViewModel
+            {
+                Articles = articles.Select(a => new ArticleViewModel
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Content = a.Content,
+                    CoverImageUrl = a.CoverImageUrl,
+                    PublishedAt = a.PublishedAt ?? DateTime.MinValue,
+                    UpdatedAt = a.UpdatedAt ?? DateTime.MinValue,
+                    IsPublished = a.IsPublished,
+                    AuthorId = a.AuthorId,
+                    AuthorName = a.Author != null ? $"{a.Author.FirstName} {a.Author.LastName}" : "Unknown",
+                    Images = a.Images?.Select(i => new ArticleImageViewModel
+                    {
+                        Id = i.Id,
+                        ImageUrl = i.ImageUrl,
+                        Caption = i.Caption,
+                        DisplayOrder = i.DisplayOrder
+                    }).ToList() ?? new List<ArticleImageViewModel>(),
+                    Comments = a.Comments
+                        .Where(c => c.IsApproved || (currentUser != null && (currentUser.IsAdmin || currentUser.IsModerator)))
+                        .Select(c => new ArticleCommentViewModel
+                        {
+                            Id = c.Id,
+                            Content = c.Content,
+                            CreatedAt = c.CreatedAt,
+                            UserName = c.User != null ? $"{c.User.FirstName} {c.User.LastName}" : "Unknown",
+                            IsApproved = c.IsApproved
+                        }).ToList()
+                }).ToList(),
+                IsAdmin = currentUser?.IsAdmin ?? false,
+                IsModerator = currentUser?.IsModerator ?? false
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize(Roles = "Admin,Moderator")]
+        public IActionResult Create()
+        {
+            return View(new CreateArticleViewModel());
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> Create(CreateArticleViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var currentUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+
+            if (currentUser == null)
+            {
+                return Forbid();
+            }
+
+            var article = new Article
+            {
+                Title = model.Title,
+                Content = model.Content,
+                AuthorId = currentUser.Id,
+                PublishedAt = DateTime.UtcNow,
+                IsPublished = currentUser.IsAdmin // Only admins can publish directly
+            };
+
+            if (model.CoverImage != null)
+            {
+                article.CoverImageUrl = await SaveImage(model.CoverImage);
+            }
+
+            _context.Articles.Add(article);
+            await _context.SaveChangesAsync();
+
+            // Handle additional images
+            for (int i = 0; i < model.AdditionalImages.Count; i++)
+            {
+                if (model.AdditionalImages[i] != null)
+                {
+                    var image = new ArticleImage
+                    {
+                        ArticleId = article.Id,
+                        ImageUrl = await SaveImage(model.AdditionalImages[i]),
+                        Caption = model.ImageCaptions[i],
+                        DisplayOrder = i
+                    };
+                    article.Images.Add(image);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var article = await _context.Articles
+                .Include(a => a.Images)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            var currentUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+
+            if (currentUser == null)
+            {
+                return Forbid();
+            }
+
+            if (!currentUser.IsAdmin && article.AuthorId != currentUser.Id)
+            {
+                return Forbid();
+            }
+
+            var viewModel = new EditArticleViewModel
+            {
+                Id = article.Id,
+                Title = article.Title,
+                Content = article.Content,
+                CurrentCoverImageUrl = article.CoverImageUrl,
+                CurrentImages = article.Images.Select(i => new ArticleImageViewModel
+                {
+                    Id = i.Id,
+                    ImageUrl = i.ImageUrl,
+                    Caption = i.Caption,
+                    DisplayOrder = i.DisplayOrder
+                }).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> Edit(EditArticleViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var article = await _context.Articles
+                .Include(a => a.Images)
+                .FirstOrDefaultAsync(a => a.Id == model.Id);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            var currentUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+
+            if (currentUser == null)
+            {
+                return Forbid();
+            }
+
+            if (!currentUser.IsAdmin && article.AuthorId != currentUser.Id)
+            {
+                return Forbid();
+            }
+
+            article.Title = model.Title;
+            article.Content = model.Content;
+            article.UpdatedAt = DateTime.UtcNow;
+
+            if (model.NewCoverImage != null)
+            {
+                if (!string.IsNullOrEmpty(article.CoverImageUrl))
+                {
+                    DeleteImage(article.CoverImageUrl);
+                }
+                article.CoverImageUrl = await SaveImage(model.NewCoverImage);
+            }
+
+            // Handle new images
+            for (int i = 0; i < model.NewImages.Count; i++)
+            {
+                if (model.NewImages[i] != null)
+                {
+                    var image = new ArticleImage
+                    {
+                        ArticleId = article.Id,
+                        ImageUrl = await SaveImage(model.NewImages[i]),
+                        Caption = model.NewImageCaptions[i],
+                        DisplayOrder = article.Images.Count + i
+                    };
+                    article.Images.Add(image);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Publish(int id)
+        {
+            var article = await _context.Articles.FindAsync(id);
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            article.IsPublished = true;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var article = await _context.Articles
+                .Include(a => a.Images)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            // Delete images
+            if (!string.IsNullOrEmpty(article.CoverImageUrl))
+            {
+                DeleteImage(article.CoverImageUrl);
+            }
+
+            foreach (var image in article.Images)
+            {
+                DeleteImage(image.ImageUrl);
+            }
+
+            _context.Articles.Remove(article);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddComment(AddCommentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var currentUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+
+            if (currentUser == null)
+            {
+                return Forbid();
+            }
+
+            var article = await _context.Articles
+                .Include(a => a.Comments)
+                .FirstOrDefaultAsync(a => a.Id == model.ArticleId);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            var comment = new ArticleComment
+            {
+                ArticleId = model.ArticleId,
+                UserId = currentUser.Id,
+                Content = model.Content,
+                IsApproved = currentUser.IsAdmin || currentUser.IsModerator
+            };
+
+            article.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> ApproveComment(int id)
+        {
+            var article = await _context.Articles
+                .Include(a => a.Comments)
+                .FirstOrDefaultAsync(a => a.Comments.Any(c => c.Id == id));
+            if (article == null)
+                return NotFound();
+
+            var comment = article.Comments.FirstOrDefault(c => c.Id == id);
+            if (comment == null)
+                return NotFound();
+
+            comment.IsApproved = true;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var article = await _context.Articles
+                .Include(a => a.Comments)
+                .FirstOrDefaultAsync(a => a.Comments.Any(c => c.Id == id));
+            if (article == null)
+                return NotFound();
+
+            var comment = article.Comments.FirstOrDefault(c => c.Id == id);
+            if (comment == null)
+                return NotFound();
+
+            article.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<string> SaveImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return $"/uploads/{uniqueFileName}";
+        }
+
+        private void DeleteImage(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return;
+            }
+
+            var filePath = Path.Combine(_environment.WebRootPath, imageUrl.TrimStart('/'));
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+        }
+    }
+} 

@@ -1,0 +1,269 @@
+@model APS.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="admin-container">
+    <div class="admin-header">
+        <h1 class="admin-title">Admin Dashboard</h1>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Total Members</h3>
+                <p class="stat-value">@Model.TotalMembersCount</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Active Members</h3>
+                <p class="stat-value">@Model.ActiveMembersCount</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-clock"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Pending Approvals</h3>
+                <p class="stat-value">@Model.PendingApprovalsCount</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-times"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Non-paying Members</h3>
+                <p class="stat-value">@Model.NonPayingMembersCount</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+        <div class="admin-card">
+            <h2 class="card-title">Pending Approvals</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.PendingUsers)
+                        {
+                            <tr>
+                                <td>@user.FirstName @user.LastName</td>
+                                <td>@user.Email</td>
+                                <td>@user.JournalistType</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" onclick="approveUser('@user.Id')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="rejectUser('@user.Id')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <h2 class="card-title">Membership Changes</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Changes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.UsersWithChanges)
+                        {
+                            <tr>
+                                <td>@user.FirstName @user.LastName</td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" onclick="viewChanges('@user.Id')">
+                                        <i class="fas fa-eye"></i> View Changes
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" onclick="approveChanges('@user.Id')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="rejectChanges('@user.Id')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <h2 class="card-title">Expiring Memberships</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Expires</th>
+                            <th>Days Left</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.ExpiringMemberships)
+                        {
+                            <tr>
+                                <td>@user.FirstName @user.LastName</td>
+                                <td>@user.MembershipExpiresAt?.ToShortDateString()</td>
+                                <td>@((user.MembershipExpiresAt - DateTime.UtcNow)?.Days)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <h2 class="card-title">Manage Types</h2>
+            <div class="type-management">
+                <div class="type-section">
+                    <h3>Journalist Types</h3>
+                    <div class="type-list">
+                        @foreach (var type in Model.JournalistTypes)
+                        {
+                            <div class="type-item">
+                                <span>@type</span>
+                                <button class="btn btn-danger btn-sm" onclick="deleteType('@type', 'journalist')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <div class="add-type">
+                        <input type="text" id="newJournalistType" class="form-control" placeholder="New type">
+                        <button class="btn btn-primary" onclick="addType('journalist')">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <div class="type-section">
+                    <h3>Publications</h3>
+                    <div class="type-list">
+                        @foreach (var pub in Model.Publications)
+                        {
+                            <div class="type-item">
+                                <span>@pub</span>
+                                <button class="btn btn-danger btn-sm" onclick="deleteType('@pub', 'publication')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <div class="add-type">
+                        <input type="text" id="newPublication" class="form-control" placeholder="New publication">
+                        <button class="btn btn-primary" onclick="addType('publication')">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Changes Modal -->
+<div class="modal fade" id="changesModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Changes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="changesContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function approveUser(userId) {
+            if (confirm('Are you sure you want to approve this user?')) {
+                // TODO: Implement approval
+            }
+        }
+
+        function rejectUser(userId) {
+            const reason = prompt('Please enter rejection reason:');
+            if (reason) {
+                // TODO: Implement rejection
+            }
+        }
+
+        function viewChanges(userId) {
+            // TODO: Implement view changes
+            $('#changesModal').modal('show');
+        }
+
+        function approveChanges(userId) {
+            if (confirm('Are you sure you want to approve these changes?')) {
+                // TODO: Implement changes approval
+            }
+        }
+
+        function rejectChanges(userId) {
+            const reason = prompt('Please enter rejection reason:');
+            if (reason) {
+                // TODO: Implement changes rejection
+            }
+        }
+
+        function addType(type) {
+            const input = type === 'journalist' ? $('#newJournalistType') : $('#newPublication');
+            const value = input.val().trim();
+            
+            if (value) {
+                // TODO: Implement add type
+                input.val('');
+            }
+        }
+
+        function deleteType(value, type) {
+            if (confirm(`Are you sure you want to delete this ${type}?`)) {
+                // TODO: Implement delete type
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin.css" />
+} 

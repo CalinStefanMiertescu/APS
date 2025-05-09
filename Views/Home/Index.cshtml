@@ -1,0 +1,133 @@
+﻿@model APS.Models.ViewModels.MemberDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="dashboard-main p-4">
+    <div class="row g-4">
+        <!-- Status abonament Card -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card bg-secondary text-light shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-id-card fa-2x me-3 text-info"></i>
+                        <h5 class="card-title mb-0">Status abonament</h5>
+                    </div>
+                    <div class="mb-2">
+                        @if (Model.IsPayingMember)
+                        {
+                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Activ</span>
+                            <div class="small mt-2">Valabil până la: <b>@Model.MembershipExpiresAt?.ToString("dd MMMM yyyy")</b></div>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Inactiv</span>
+                            <div class="small mt-2">Expirat la: <b>@Model.MembershipExpiresAt?.ToString("dd MMMM yyyy")</b></div>
+                        }
+                    </div>
+                    <button class="btn btn-info w-100 mt-3" data-bs-toggle="modal" data-bs-target="#extendMembershipModal">
+                        @(Model.IsPayingMember ? "Reînnoiește abonamentul" : "Activează abonamentul")
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Membri Online Card -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card bg-secondary text-light shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-users fa-2x me-3 text-info"></i>
+                        <h5 class="card-title mb-0">Membri Online</h5>
+                    </div>
+                    <div class="display-5 fw-bold">@Model.ActiveMembersCount</div>
+                </div>
+            </div>
+        </div>
+        <!-- Canale de socializare Card -->
+        <div class="col-lg-4 col-md-12">
+            <div class="card bg-secondary text-light shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-link fa-2x me-3 text-info"></i>
+                        <h5 class="card-title mb-0">Canale de socializare</h5>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="https://apsmedia.ro/#" class="btn btn-outline-info" target="_blank"><i class="fas fa-globe"></i> Main Website</a>
+                        <a href="#" class="btn btn-outline-info" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                        <a href="#" class="btn btn-outline-info" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="#" class="btn btn-outline-info" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                        <a href="#" class="btn btn-outline-info" target="_blank"><i class="fab fa-youtube"></i> Youtube</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Anunțuri Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-secondary text-light shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-bullhorn fa-2x me-3 text-info"></i>
+                        <h5 class="card-title mb-0">Anunțuri</h5>
+                    </div>
+                    <div class="row g-3">
+                        @if (Model.Announcements != null && Model.Announcements.Any())
+                        {
+                            @foreach (var announcement in Model.Announcements)
+                            {
+                                <div class="col-md-4">
+                                    <div class="announcement-card bg-dark text-light p-3 rounded h-100">
+                                        <h6 class="fw-bold">@announcement.Title</h6>
+                                        <p class="mb-1">@announcement.Content</p>
+                                        <small class="text-muted">@announcement.CreatedAt.ToString("dd MMMM yyyy")</small>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12 text-center text-muted">Nu există anunțuri încă.</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Extend Membership Modal -->
+<div class="modal fade" id="extendMembershipModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title">Reînnoiește abonamentul</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="extendMembershipForm">
+                    <div class="form-group mb-3">
+                        <label>Durata abonamentului</label>
+                        <select class="form-select" name="duration">
+                            <option value="1">1 an</option>
+                            <option value="2">2 ani</option>
+                            <option value="3">3 ani</option>
+                        </select>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="autoRenew" name="autoRenew">
+                        <label class="form-check-label" for="autoRenew">Activează reînnoirea automată</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+                <button type="button" class="btn btn-info" id="proceedToPayment">Plătește</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/sidebar.css" />
+}

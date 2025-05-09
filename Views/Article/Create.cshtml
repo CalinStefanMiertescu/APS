@@ -1,0 +1,84 @@
+@model APS.Models.ViewModels.CreateArticleViewModel
+@{
+    ViewData["Title"] = "Create Article";
+}
+
+<div class="create-article-container">
+    <div class="create-article-header">
+        <h1 class="create-article-title">Create New Article</h1>
+    </div>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="create-article-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Content" class="form-label">Content</label>
+            <textarea asp-for="Content" class="form-control" rows="10"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CoverImage" class="form-label">Cover Image</label>
+            <input asp-for="CoverImage" type="file" class="form-control" accept="image/*" />
+            <span asp-validation-for="CoverImage" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Additional Images</label>
+            <div id="additionalImages">
+                <div class="image-input-group">
+                    <input type="file" name="AdditionalImages" class="form-control" accept="image/*" />
+                    <input type="text" name="ImageCaptions" class="form-control" placeholder="Image caption" />
+                    <button type="button" class="btn btn-danger remove-image">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary" id="addImage">
+                <i class="fas fa-plus"></i> Add Image
+            </button>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Article
+            </button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#addImage').click(function() {
+                var imageGroup = `
+                    <div class="image-input-group">
+                        <input type="file" name="AdditionalImages" class="form-control" accept="image/*" />
+                        <input type="text" name="ImageCaptions" class="form-control" placeholder="Image caption" />
+                        <button type="button" class="btn btn-danger remove-image">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                $('#additionalImages').append(imageGroup);
+            });
+
+            $(document).on('click', '.remove-image', function() {
+                $(this).closest('.image-input-group').remove();
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/articles.css" />
+} 

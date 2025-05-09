@@ -1,0 +1,153 @@
+@model APS.Models.ViewModels.MemberDashboardViewModel
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+@if (currentController == "Home" && currentAction == "Index")
+{
+    <div class="sidebar bg-dark text-light d-flex flex-column align-items-center" style="min-width:320px; min-height:100vh; position:relative; justify-content:flex-start;">
+        <div class="w-100 d-flex flex-column align-items-center mt-4" style="flex:1 0 auto;">
+            <a href="@Url.Action("Profile", "Member")" style="display:inline-block; position:relative;">
+                <div class="profile-pic-upload" style="position:relative; display:inline-block;">
+                    <img src="@(Model?.ProfilePictureUrl ?? "/images/profile-placeholder.jpg")" class="profile-pic mb-3" style="width:120px; height:120px; border-radius:50%; object-fit:cover; background:#00cfff; border:4px solid #00cfff; box-shadow:0 0 16px #00cfff80,0 0 0 6px #232b36; transition:box-shadow 0.3s;" />
+                    <span class="profile-pic-camera-btn" style="position:absolute; bottom:6px; right:6px; background:linear-gradient(135deg,#00cfff 60%,#1ed760 100%); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; box-shadow:0 2px 8px #00cfff55; border:2px solid #232b36; z-index:2;">
+                        <i class="fas fa-camera"></i>
+                    </span>
+                </div>
+            </a>
+            <div class="fw-bold text-info" style="font-size:1.3rem;">@(Model?.FirstName ?? "USERNAME") @(Model?.LastName ?? "")</div>
+            <div class="text-uppercase mt-2" style="font-size:0.95rem; color:#7a869a;">@(Model?.Role ?? "USER")</div>
+            <div class="mt-2 text-center" style="font-size:0.95rem; color:#e0e6ed;">@(Model?.Biography ?? "User Biography")</div>
+        </div>
+        <div style="width:100%; position:absolute; left:0; bottom:0; display:flex; flex-direction:column; align-items:center;">
+            <img src="\images\apsr-alb.png" alt="Asociatia Presei Sportive din Romania logo" style="width:120px; margin-bottom:0.5rem;" />
+            <div style="color:#b0b8c1; font-size:1rem; margin-bottom:10px;">Versiunea 1.0</div>
+        </div>
+    </div>
+}
+
+<!-- Member Page Model -->
+<div class="modal fade" id="memberPageModal" tabindex="-1" aria-labelledby="memberPageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title" id="memberPageModalLabel">Member Profile</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (TempData["ProfilePictureMessage"] != null)
+                {
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        @TempData["ProfilePictureMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["BiographyMessage"] != null)
+                {
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        @TempData["BiographyMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img src="@(Model?.ProfilePictureUrl ?? "/images/profile-placeholder.jpg")" class="profile-pic mb-3" alt="Profile" style="width:150px; height:150px;" />
+                        <h4 class="text-info">@(Model?.FirstName ?? "") @(Model?.LastName ?? "")</h4>
+                        <p class="text-muted">@(Model?.JournalistType ?? "")</p>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card bg-secondary mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Membership Status</h5>
+                                @if (Model?.IsPayingMember == true)
+                                {
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check-circle"></i> Active Member
+                                        <br>
+                                        <small>Expires: @(Model?.MembershipExpiresAt?.ToString("dd/MM/yyyy") ?? "")</small>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-circle"></i> Not a Member
+                                        <p class="mb-0">Become a member to access exclusive content and features!</p>
+                                    </div>
+                                    <div id="paypal-button-container" class="mt-3"></div>
+                                }
+                            </div>
+                        </div>
+                        <div class="card bg-secondary">
+                            <div class="card-body">
+                                <h5 class="card-title">Profile Information</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Email:</strong> @(Model?.Email ?? "")</p>
+                                        <p><strong>Phone:</strong> @(Model?.Phone ?? "")</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>City:</strong> @(Model?.City ?? "")</p>
+                                        <p><strong>Publication:</strong> @(Model?.Publication ?? "")</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <h6>Biography</h6>
+                                    <p>@(Model?.Biography ?? "")</p>
+                                </div>
+                            </div>
+                        </div>
+                        <form asp-action="UploadProfilePicture" asp-controller="Member" method="post" enctype="multipart/form-data" class="mb-2">
+                            <input type="file" name="profilePicture" accept="image/*" class="form-control form-control-sm mb-2" />
+                            <button type="submit" class="btn btn-info btn-sm w-100">Upload New Picture</button>
+                        </form>
+                        <form asp-action="UpdateBiography" asp-controller="Member" method="post" class="mb-2">
+                            <textarea name="biography" class="form-control form-control-sm mb-2" rows="2" maxlength="500" placeholder="Add your biography here...">@Model.Biography</textarea>
+                            <button type="submit" class="btn btn-info btn-sm w-100">Update Biography</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '50.00' // Membership price in EUR
+                        },
+                        description: 'APS Annual Membership'
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Send payment details to server
+                    fetch('/Member/ProcessPayment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            orderId: details.id,
+                            paymentId: details.purchase_units[0].payments.captures[0].id,
+                            status: details.status
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Refresh the page or update UI
+                            window.location.reload();
+                        }
+                    });
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+} 
