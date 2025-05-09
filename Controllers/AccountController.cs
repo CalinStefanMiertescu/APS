@@ -127,5 +127,13 @@ namespace APS.Controllers
         {
             return Guid.NewGuid().ToString();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
+        }
     }
 } 

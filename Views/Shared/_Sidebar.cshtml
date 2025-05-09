@@ -3,7 +3,7 @@
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
-@if (currentController == "Home" && currentAction == "Index")
+@if (Model != null && currentController == "Home" && currentAction == "Index")
 {
     <div class="sidebar bg-dark text-light d-flex flex-column align-items-center" style="min-width:320px; min-height:100vh; position:relative; justify-content:flex-start;">
         <div class="w-100 d-flex flex-column align-items-center mt-4" style="flex:1 0 auto;">
@@ -18,10 +18,32 @@
             <div class="fw-bold text-info" style="font-size:1.3rem;">@(Model?.FirstName ?? "USERNAME") @(Model?.LastName ?? "")</div>
             <div class="text-uppercase mt-2" style="font-size:0.95rem; color:#7a869a;">@(Model?.Role ?? "USER")</div>
             <div class="mt-2 text-center" style="font-size:0.95rem; color:#e0e6ed;">@(Model?.Biography ?? "User Biography")</div>
+            <div class="mt-4 w-100">
+                <div class="modern-sidebar-links d-flex flex-column gap-3 align-items-stretch px-2">
+                    <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
+                        <i class="fas fa-newspaper"></i>
+                        <span>News</span>
+                    </a>
+                    <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn">
+                        <i class="fas fa-plus-square"></i>
+                        <span>Create News</span>
+                    </a>
+                    <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn">
+                        <i class="fas fa-tools"></i>
+                        <span>Admin Dashboard</span>
+                    </a>
+                </div>
+            </div>
         </div>
         <div style="width:100%; position:absolute; left:0; bottom:0; display:flex; flex-direction:column; align-items:center;">
             <img src="\images\apsr-alb.png" alt="Asociatia Presei Sportive din Romania logo" style="width:120px; margin-bottom:0.5rem;" />
             <div style="color:#b0b8c1; font-size:1rem; margin-bottom:10px;">Versiunea 1.0</div>
+            <form asp-controller="Account" asp-action="Logout" method="post" style="width:90%;">
+                <button type="submit" class="spectacular-card-link spectacular-logout-link w-100 mt-2">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </button>
+            </form>
         </div>
     </div>
 }
@@ -150,4 +172,71 @@
             }
         }).render('#paypal-button-container');
     </script>
+}
+
+@section Styles {
+    <style>
+        .modern-sidebar-links {
+            gap: 1.2rem !important;
+        }
+        .modern-sidebar-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #232b36;
+            color: #1ecfff;
+            font-weight: 600;
+            border-radius: 1.1rem;
+            padding: 1.1rem 1.2rem;
+            font-size: 1.13rem;
+            box-shadow: 0 2px 8px #00cfff11;
+            border: none;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+            text-decoration: none;
+            outline: none;
+        }
+        .modern-sidebar-btn i {
+            font-size: 1.25rem;
+            color: #1ecfff;
+            min-width: 1.7rem;
+            text-align: center;
+        }
+        .modern-sidebar-btn span {
+            flex: 1;
+            text-align: left;
+        }
+        .modern-sidebar-btn:hover, .modern-sidebar-btn:focus {
+            background: #263142;
+            color: #fff;
+            box-shadow: 0 0 12px #00cfff99;
+            transform: translateY(-2px) scale(1.04);
+            text-decoration: none;
+        }
+        .modern-sidebar-btn:hover i, .modern-sidebar-btn:focus i {
+            color: #fff;
+        }
+        .spectacular-logout-link {
+            background: linear-gradient(135deg, #ff416c 80%, #ff4b2b 100%);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 1.3rem;
+            padding: 1.15rem 1.3rem;
+            font-size: 1.18rem;
+            box-shadow: 0 4px 16px #ff416c22;
+            border: 1.5px solid #ff416c;
+            margin-top: 1.5rem;
+        }
+        .spectacular-logout-link i {
+            color: #fff;
+        }
+        .spectacular-logout-link:hover, .spectacular-logout-link:focus {
+            background: linear-gradient(135deg, #ff4b2b 60%, #ff416c 100%);
+            color: #fff;
+            box-shadow: 0 0 18px #ff416ccc, 0 0 8px #ff4b2b99;
+            transform: translateY(-2px) scale(1.04);
+        }
+        .spectacular-logout-link:hover i, .spectacular-logout-link:focus i {
+            color: #fff;
+        }
+    </style>
 } 
