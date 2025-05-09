@@ -585,3 +585,4 @@ E:\APS\obj\Debug\net9.0\compressed\mb6shtfl5j-muycvpuwrr.gz
 E:\APS\obj\Debug\net9.0\compressed\3ohe69qi9e-jfsiqqwiad.gz
 E:\APS\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 E:\APS\obj\Debug\net9.0\compressed\bwpweqzll7-ymw5klq97k.gz
+E:\APS\obj\Debug\net9.0\APS.sourcelink.json
