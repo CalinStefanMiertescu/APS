@@ -1,11 +1,11 @@
-﻿// Authorization/IsAdminRequirement.cs
+﻿
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using APS.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace APS.Authorization
+namespace APS.Policys
 {
     public class IsAdminRequirement : IAuthorizationRequirement { }
 

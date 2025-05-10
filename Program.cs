@@ -1,9 +1,10 @@
-using APS.Authorization;
+using APS.Policys;
 using APS.Data;
 using APS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static APS.Policys.IsModeratorRequirment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdmin", policy => policy.Requirements.Add(new IsAdminRequirement()));
+    options.AddPolicy("RequireModerator", policy => policy.Requirements.Add(new IsModeratorRequirement()));
 });
 
 // Register the authorization handler
