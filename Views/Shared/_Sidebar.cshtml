@@ -10,8 +10,8 @@
             <a href="@Url.Action("Profile", "Member")" style="display:inline-block; position:relative;">
                 <div class="profile-pic-upload" style="position:relative; display:inline-block;">
                     <img src="@(Model?.ProfilePictureUrl ?? "/images/profile-placeholder.jpg")" class="profile-pic mb-3" style="width:120px; height:120px; border-radius:50%; object-fit:cover; background:#00cfff; border:4px solid #00cfff; box-shadow:0 0 16px #00cfff80,0 0 0 6px #232b36; transition:box-shadow 0.3s;" />
-                    <span class="profile-pic-camera-btn" style="position:absolute; bottom:6px; right:6px; background:linear-gradient(135deg,#00cfff 60%,#1ed760 100%); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; box-shadow:0 2px 8px #00cfff55; border:2px solid #232b36; z-index:2;">
-                        <i class="fas fa-camera"></i>
+                    <span class="profile-pic-camera-btn" style="position:absolute; bottom:6px; right:6px; background:linear-gradient(135deg,#00cfff 60%,#1ed760 100%); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.3rem; box-shadow:0 2px 8px #00cfff55; border:2px solid #232b36; z-index:2;">
+                        <span class="material-icons" style="font-size:1.3rem;">photo_camera</span>
                     </span>
                 </div>
             </a>
@@ -19,19 +19,83 @@
             <div class="text-uppercase mt-2" style="font-size:0.95rem; color:#7a869a;">@(Model?.Role ?? "USER")</div>
             <div class="mt-2 text-center" style="font-size:0.95rem; color:#e0e6ed;">@(Model?.Biography ?? "User Biography")</div>
             <div class="mt-4 w-100">
-                <div class="modern-sidebar-links d-flex flex-column gap-3 align-items-stretch px-2">
-                    <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
-                        <i class="fas fa-newspaper"></i>
-                        <span>News</span>
-                    </a>
-                    <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn">
-                        <i class="fas fa-plus"></i>
-                        <span>Create News</span>
-                    </a>
-                    <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn">
-                        <i class="fas fa-tools"></i>
-                        <span>Admin Dashboard</span>
-                    </a>
+                <div class="modern-sidebar-links d-flex flex-column gap-1 align-items-stretch px-2">
+                    @* News page: Home, Admin Dashboard *@
+                    @if (currentController == "Article" && currentAction == "Index")
+                    {
+                        @if (!(currentController == "Home" && currentAction == "Index"))
+                        {
+                            <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
+                                <span class="material-icons">home</span>
+                                <span>Home</span>
+                            </a>
+                        }
+                        <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
+                            <span class="material-icons">admin_panel_settings</span>
+                            <span>Admin Dashboard</span>
+                        </a>
+                    }
+                    @* Create News page: Home, News, Admin Dashboard *@
+                    else if (currentController == "Article" && currentAction == "Create")
+                    {
+                        @if (!(currentController == "Home" && currentAction == "Index"))
+                        {
+                            <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
+                                <span class="material-icons">home</span>
+                                <span>Home</span>
+                            </a>
+                        }
+                        <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
+                            <span class="material-icons">article</span>
+                            <span>News</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
+                            <span class="material-icons">admin_panel_settings</span>
+                            <span>Admin Dashboard</span>
+                        </a>
+                    }
+                    @* Admin Dashboard: Home, News, Create News *@
+                    else if (currentController == "Admin")
+                    {
+                        @if (!(currentController == "Home" && currentAction == "Index"))
+                        {
+                            <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
+                                <span class="material-icons">home</span>
+                                <span>Home</span>
+                            </a>
+                        }
+                        <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
+                            <span class="material-icons">article</span>
+                            <span>News</span>
+                        </a>
+                        <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn @(currentController == "Article" && currentAction == "Create" ? "active" : "")">
+                            <span class="material-icons">add_circle</span>
+                            <span>Create News</span>
+                        </a>
+                    }
+                    @* Default: Home, News, Create News, Admin Dashboard *@
+                    else
+                    {
+                        @if (!(currentController == "Home" && currentAction == "Index"))
+                        {
+                            <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
+                                <span class="material-icons">home</span>
+                                <span>Home</span>
+                            </a>
+                        }
+                        <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
+                            <span class="material-icons">article</span>
+                            <span>News</span>
+                        </a>
+                        <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn">
+                            <span class="material-icons">add_circle</span>
+                            <span>Create News</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
+                            <span class="material-icons">admin_panel_settings</span>
+                            <span>Admin Dashboard</span>
+                        </a>
+                    }
                 </div>
             </div>
         </div>

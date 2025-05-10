@@ -147,7 +147,7 @@ body, .main-content {
 .modern-sidebar-btn {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    justify-content: center;
     background: #232b36 !important;
     color: #e0e6ed !important;
     font-weight: 600;
@@ -156,7 +156,7 @@ body, .main-content {
     font-size: 1.08rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     border: none;
-    margin-bottom: 1.1rem;
+    margin-bottom: 0.4rem;
     transition: background 0.18s, box-shadow 0.18s, color 0.18s;
     text-decoration: none !important;
     outline: none;
@@ -176,13 +176,30 @@ body, .main-content {
     text-align: center;
 }
 .modern-sidebar-btn span {
-    flex: 1;
-    text-align: left;
+    text-align: center;
 }
 .modern-sidebar-btn:focus i,
 .modern-sidebar-btn:active i,
 .modern-sidebar-btn:hover i {
     color: #fff;
+}
+
+.modern-sidebar-btn.active,
+.modern-sidebar-btn.active:focus,
+.modern-sidebar-btn.active:hover {
+    background: #00cfff !important;
+    color: #fff !important;
+}
+.modern-sidebar-btn.active i {
+    color: #fff !important;
+}
+
+.modern-sidebar-btn .material-icons {
+    margin-right: 0.5em !important;
+    min-width: 0 !important;
+    width: auto !important;
+    font-size: 1.25rem !important;
+    vertical-align: middle;
 }
 
 .spectacular-logout-link {
