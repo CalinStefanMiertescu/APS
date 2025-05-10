@@ -1,5 +1,7 @@
+using APS.Authorization;
 using APS.Data;
 using APS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +25,15 @@ builder.Services.AddAuthentication(options =>
     options.DefaultSignInScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ExternalScheme;
     options.DefaultChallengeScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme;
 });
+
+// Add authorization with custom policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdmin", policy => policy.Requirements.Add(new IsAdminRequirement()));
+});
+
+// Register the authorization handler
+builder.Services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
 
 var app = builder.Build();
 
