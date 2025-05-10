@@ -1,6 +1,7 @@
 @model APS.Models.ViewModels.AdminDashboardViewModel
 @{
     ViewData["Title"] = "Admin Dashboard";
+    var filterLocation = Context.Request.Query["filterLocation"].ToString();
 }
 
 <div class="modern-admin-container">
@@ -189,6 +190,73 @@
                 </div>
             </div>
         </div>
+        <!-- Active Members -->
+        <div class="modern-admin-card glass-card">
+            <h2 class="modern-card-title">Active Members</h2>
+            <form method="get" class="mb-2">
+                <select name="filterType" class="modern-form-control" onchange="this.form.submit()">
+                    <option value="">All Types</option>
+                    @foreach (var type in Model.JournalistTypes) { <option value="@type">@type</option> }
+                </select>
+                <select name="filterPublication" class="modern-form-control" onchange="this.form.submit()">
+                    <option value="">All Publications</option>
+                    @foreach (var pub in Model.Publications) { <option value="@pub">@pub</option> }
+                </select>
+                <input name="filterLocation" class="modern-form-control" placeholder="Location" value="@filterLocation" />
+                <button type="submit" class="modern-btn modern-btn-secondary">Filter</button>
+            </form>
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr><th>Name</th><th>Email</th><th>Type</th><th>Publication</th><th>Location</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.ActiveMembers)
+                        {
+                            <tr>
+                                <td>@user.FirstName @user.LastName</td>
+                                <td>@user.Email</td>
+                                <td>@user.JournalistType</td>
+                                <td>@user.Publication</td>
+                                <td>@user.City</td>
+                                <td>
+                                    <button class="modern-btn modern-btn-danger btn-sm" onclick="inactivateMember('@user.Id')">
+                                        <i class="fas fa-user-slash"></i> Inactivate
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Non-Paying Members -->
+        <div class="modern-admin-card glass-card">
+            <h2 class="modern-card-title">Non-Paying Members</h2>
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr><th>Name</th><th>Email</th><th>Type</th><th>Set Active Until</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.NonPayingMembers)
+                        {
+                            <tr>
+                                <td>@user.FirstName @user.LastName</td>
+                                <td>@user.Email</td>
+                                <td>@user.JournalistType</td>
+                                <td><input type="date" id="activeUntil_@user.Id" class="modern-form-control" /></td>
+                                <td>
+                                    <button class="modern-btn modern-btn-success btn-sm" onclick="activateMember('@user.Id')">
+                                        <i class="fas fa-user-check"></i> Activate
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -214,48 +282,59 @@
     <script>
         function approveUser(userId) {
             if (confirm('Are you sure you want to approve this user?')) {
-                // TODO: Implement approval
+                $.post('/Admin/ApproveUser', { userId: userId }, function() { location.reload(); });
             }
         }
-
         function rejectUser(userId) {
             const reason = prompt('Please enter rejection reason:');
             if (reason) {
-                // TODO: Implement rejection
+                $.post('/Admin/RejectUser', { userId: userId, reason: reason }, function() { location.reload(); });
             }
         }
-
-        function viewChanges(userId) {
-            // TODO: Implement view changes
-            $('#changesModal').modal('show');
+        function inactivateMember(userId) {
+            if (confirm('Are you sure you want to inactivate this member?')) {
+                $.post('/Admin/InactivateMember', { userId: userId }, function() { location.reload(); });
+            }
         }
-
+        function activateMember(userId) {
+            const until = $('#activeUntil_' + userId).val();
+            if (!until) { alert('Please select a date.'); return; }
+            $.post('/Admin/ActivateMember', { userId: userId, until: until }, function() { location.reload(); });
+        }
+        function viewChanges(userId) {
+            $.get('/Admin/GetPendingChanges', { userId: userId }, function(data) {
+                let html = '';
+                try {
+                    const changes = JSON.parse(data);
+                    for (const key in changes) {
+                        html += `<div><b>${key}</b>: ${changes[key]}</div>`;
+                    }
+                } catch (e) { html = 'No changes found.'; }
+                $('#changesContent').html(html);
+                $('#changesModal').modal('show');
+            });
+        }
         function approveChanges(userId) {
             if (confirm('Are you sure you want to approve these changes?')) {
-                // TODO: Implement changes approval
+                $.post('/Admin/ApproveChanges', { userId: userId }, function() { location.reload(); });
             }
         }
-
         function rejectChanges(userId) {
             const reason = prompt('Please enter rejection reason:');
             if (reason) {
-                // TODO: Implement changes rejection
+                $.post('/Admin/RejectChanges', { userId: userId, reason: reason }, function() { location.reload(); });
             }
         }
-
         function addType(type) {
             const input = type === 'journalist' ? $('#newJournalistType') : $('#newPublication');
             const value = input.val().trim();
-            
             if (value) {
-                // TODO: Implement add type
-                input.val('');
+                $.post('/Admin/AddType', { type: type, value: value }, function() { location.reload(); });
             }
         }
-
         function deleteType(value, type) {
             if (confirm(`Are you sure you want to delete this ${type}?`)) {
-                // TODO: Implement delete type
+                $.post('/Admin/DeleteType', { type: type, value: value }, function() { location.reload(); });
             }
         }
     </script>

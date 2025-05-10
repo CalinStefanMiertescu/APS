@@ -82,8 +82,8 @@ async Task SeedAdminUserAsync(IServiceProvider services)
         {
             UserName = adminEmail,
             Email = adminEmail,
-            FirstName = "Admin",
-            LastName = "Admin",
+            FirstName = "Calin",
+            LastName = "Stefan",
             IsAdmin = true,
             IsActive = true, // Doar adminul seed e activ automat
             EmailConfirmed = true,

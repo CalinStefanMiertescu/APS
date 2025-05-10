@@ -66,10 +66,9 @@ namespace APS.Controllers
             {
                 return NotFound();
             }
-
             user.IsActive = true;
+            user.IsPayingMember = false;
             await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -203,10 +202,22 @@ namespace APS.Controllers
                 return NotFound();
             }
             user.IsActive = true;
+            user.IsPayingMember = true;
             if (until.HasValue)
                 user.MembershipExpiresAt = until;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPendingChanges(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null || string.IsNullOrEmpty(user.PendingChangesJson))
+            {
+                return NotFound();
+            }
+            return Json(user.PendingChangesJson);
         }
     }
 } 
