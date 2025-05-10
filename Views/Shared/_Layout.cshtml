@@ -12,7 +12,10 @@
 </head>
 <body>
     <div class="d-flex" style="min-height:100vh;">
-        @{ Html.RenderPartial("_Sidebar", Model as APS.Models.ViewModels.MemberDashboardViewModel); }
+        @if (ViewBag.SidebarModel != null)
+        {
+            Html.RenderPartial("_Sidebar", ViewBag.SidebarModel as APS.Models.ViewModels.MemberDashboardViewModel);
+        }
         <div class="flex-grow-1 main-content bg-dark text-light">
             <div class="container-fluid">
                 <main role="main" class="pb-3">

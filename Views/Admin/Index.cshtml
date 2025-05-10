@@ -3,58 +3,56 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="admin-container">
-    <div class="admin-header">
-        <h1 class="admin-title">Admin Dashboard</h1>
+<div class="modern-admin-container">
+    <div class="modern-admin-header">
+        <h1 class="modern-admin-title">Admin Dashboard</h1>
     </div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon">
+    <div class="modern-stats-grid">
+        <div class="modern-stat-card glass-card">
+            <div class="modern-stat-icon bg-cyan">
                 <i class="fas fa-users"></i>
             </div>
-            <div class="stat-info">
+            <div class="modern-stat-info">
                 <h3>Total Members</h3>
-                <p class="stat-value">@Model.TotalMembersCount</p>
+                <p class="modern-stat-value">@Model.TotalMembersCount</p>
             </div>
         </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="modern-stat-card glass-card">
+            <div class="modern-stat-icon bg-green">
                 <i class="fas fa-user-check"></i>
             </div>
-            <div class="stat-info">
+            <div class="modern-stat-info">
                 <h3>Active Members</h3>
-                <p class="stat-value">@Model.ActiveMembersCount</p>
+                <p class="modern-stat-value">@Model.ActiveMembersCount</p>
             </div>
         </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="modern-stat-card glass-card">
+            <div class="modern-stat-icon bg-yellow">
                 <i class="fas fa-user-clock"></i>
             </div>
-            <div class="stat-info">
+            <div class="modern-stat-info">
                 <h3>Pending Approvals</h3>
-                <p class="stat-value">@Model.PendingApprovalsCount</p>
+                <p class="modern-stat-value">@Model.PendingApprovalsCount</p>
             </div>
         </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="modern-stat-card glass-card">
+            <div class="modern-stat-icon bg-red">
                 <i class="fas fa-user-times"></i>
             </div>
-            <div class="stat-info">
+            <div class="modern-stat-info">
                 <h3>Non-paying Members</h3>
-                <p class="stat-value">@Model.NonPayingMembersCount</p>
+                <p class="modern-stat-value">@Model.NonPayingMembersCount</p>
             </div>
         </div>
     </div>
 
-    <div class="admin-grid">
-        <div class="admin-card">
-            <h2 class="card-title">Pending Approvals</h2>
+    <div class="modern-admin-grid">
+        <!-- Pending Approvals -->
+        <div class="modern-admin-card glass-card">
+            <h2 class="modern-card-title">Pending Approvals</h2>
             <div class="table-responsive">
-                <table class="table">
+                <table class="modern-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -71,10 +69,10 @@
                                 <td>@user.Email</td>
                                 <td>@user.JournalistType</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" onclick="approveUser('@user.Id')">
+                                    <button class="modern-btn modern-btn-success btn-sm" onclick="approveUser('@user.Id')">
                                         <i class="fas fa-check"></i> Approve
                                     </button>
-                                    <button class="btn btn-danger btn-sm" onclick="rejectUser('@user.Id')">
+                                    <button class="modern-btn modern-btn-danger btn-sm" onclick="rejectUser('@user.Id')">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </td>
@@ -84,11 +82,11 @@
                 </table>
             </div>
         </div>
-
-        <div class="admin-card">
-            <h2 class="card-title">Membership Changes</h2>
+        <!-- Membership Changes -->
+        <div class="modern-admin-card glass-card">
+            <h2 class="modern-card-title">Membership Changes</h2>
             <div class="table-responsive">
-                <table class="table">
+                <table class="modern-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -102,15 +100,15 @@
                             <tr>
                                 <td>@user.FirstName @user.LastName</td>
                                 <td>
-                                    <button class="btn btn-info btn-sm" onclick="viewChanges('@user.Id')">
+                                    <button class="modern-btn modern-btn-info btn-sm" onclick="viewChanges('@user.Id')">
                                         <i class="fas fa-eye"></i> View Changes
                                     </button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" onclick="approveChanges('@user.Id')">
+                                    <button class="modern-btn modern-btn-success btn-sm" onclick="approveChanges('@user.Id')">
                                         <i class="fas fa-check"></i> Approve
                                     </button>
-                                    <button class="btn btn-danger btn-sm" onclick="rejectChanges('@user.Id')">
+                                    <button class="modern-btn modern-btn-danger btn-sm" onclick="rejectChanges('@user.Id')">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </td>
@@ -120,11 +118,11 @@
                 </table>
             </div>
         </div>
-
-        <div class="admin-card">
-            <h2 class="card-title">Expiring Memberships</h2>
+        <!-- Expiring Memberships -->
+        <div class="modern-admin-card glass-card">
+            <h2 class="modern-card-title">Expiring Memberships</h2>
             <div class="table-responsive">
-                <table class="table">
+                <table class="modern-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -145,47 +143,46 @@
                 </table>
             </div>
         </div>
-
-        <div class="admin-card">
-            <h2 class="card-title">Manage Types</h2>
-            <div class="type-management">
-                <div class="type-section">
+        <!-- Manage Types -->
+        <div class="modern-admin-card glass-card">
+            <h2 class="modern-card-title">Manage Types</h2>
+            <div class="modern-type-management">
+                <div class="modern-type-section">
                     <h3>Journalist Types</h3>
-                    <div class="type-list">
+                    <div class="modern-type-list">
                         @foreach (var type in Model.JournalistTypes)
                         {
-                            <div class="type-item">
+                            <div class="modern-type-item">
                                 <span>@type</span>
-                                <button class="btn btn-danger btn-sm" onclick="deleteType('@type', 'journalist')">
+                                <button class="modern-btn modern-btn-danger btn-sm" onclick="deleteType('@type', 'journalist')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         }
                     </div>
-                    <div class="add-type">
-                        <input type="text" id="newJournalistType" class="form-control" placeholder="New type">
-                        <button class="btn btn-primary" onclick="addType('journalist')">
+                    <div class="modern-add-type">
+                        <input type="text" id="newJournalistType" class="modern-form-control" placeholder="New type">
+                        <button class="modern-btn modern-btn-primary" onclick="addType('journalist')">
                             <i class="fas fa-plus"></i> Add
                         </button>
                     </div>
                 </div>
-
-                <div class="type-section">
+                <div class="modern-type-section">
                     <h3>Publications</h3>
-                    <div class="type-list">
+                    <div class="modern-type-list">
                         @foreach (var pub in Model.Publications)
                         {
-                            <div class="type-item">
+                            <div class="modern-type-item">
                                 <span>@pub</span>
-                                <button class="btn btn-danger btn-sm" onclick="deleteType('@pub', 'publication')">
+                                <button class="modern-btn modern-btn-danger btn-sm" onclick="deleteType('@pub', 'publication')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         }
                     </div>
-                    <div class="add-type">
-                        <input type="text" id="newPublication" class="form-control" placeholder="New publication">
-                        <button class="btn btn-primary" onclick="addType('publication')">
+                    <div class="modern-add-type">
+                        <input type="text" id="newPublication" class="modern-form-control" placeholder="New publication">
+                        <button class="modern-btn modern-btn-primary" onclick="addType('publication')">
                             <i class="fas fa-plus"></i> Add
                         </button>
                     </div>
@@ -266,4 +263,5 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/css/modern.css" />
 } 

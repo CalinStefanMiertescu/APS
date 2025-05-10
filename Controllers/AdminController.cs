@@ -12,14 +12,9 @@ using System.Text.Json;
 namespace APS.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
+    public class AdminController : BaseController
     {
-        private readonly APSContext _context;
-
-        public AdminController(APSContext context)
-        {
-            _context = context;
-        }
+        public AdminController(APSContext context) : base(context) { }
 
         public async Task<IActionResult> Index(string filterType = null, string filterPublication = null, string filterLocation = null)
         {

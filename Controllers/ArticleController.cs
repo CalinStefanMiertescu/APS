@@ -14,27 +14,22 @@ using System.Security.Claims;
 
 namespace APS.Controllers
 {
-    public class ArticleController : Controller
+    public class ArticleController : BaseController
     {
-        private readonly APSContext _context;
         private readonly IWebHostEnvironment _environment;
 
-        public ArticleController(APSContext context, IWebHostEnvironment environment)
+        public ArticleController(APSContext context, IWebHostEnvironment environment) : base(context)
         {
-            _context = context;
             _environment = environment;
         }
 
         public async Task<IActionResult> Index()
         {
-            var currentUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-
             var articles = await _context.Articles
                 .Include(a => a.Author)
                 .Include(a => a.Images)
                 .Include(a => a.Comments)
-                .Where(a => a.IsPublished || (currentUser != null && (currentUser.IsAdmin || currentUser.IsModerator)))
+                .Where(a => a.IsPublished || (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator"))))
                 .OrderByDescending(a => a.PublishedAt)
                 .ToListAsync();
 
@@ -59,7 +54,7 @@ namespace APS.Controllers
                         DisplayOrder = i.DisplayOrder
                     }).ToList() ?? new List<ArticleImageViewModel>(),
                     Comments = a.Comments
-                        .Where(c => c.IsApproved || (currentUser != null && (currentUser.IsAdmin || currentUser.IsModerator)))
+                        .Where(c => c.IsApproved || (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator"))))
                         .Select(c => new ArticleCommentViewModel
                         {
                             Id = c.Id,
@@ -69,15 +64,15 @@ namespace APS.Controllers
                             IsApproved = c.IsApproved
                         }).ToList()
                 }).ToList(),
-                IsAdmin = currentUser?.IsAdmin ?? false,
-                IsModerator = currentUser?.IsModerator ?? false
+                IsAdmin = User.IsInRole("Admin"),
+                IsModerator = User.IsInRole("Moderator")
             };
 
             return View(viewModel);
         }
 
         [Authorize(Roles = "Admin,Moderator")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View(new CreateArticleViewModel());
         }
@@ -91,21 +86,13 @@ namespace APS.Controllers
                 return View(model);
             }
 
-            var currentUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-
-            if (currentUser == null)
-            {
-                return Forbid();
-            }
-
             var article = new Article
             {
                 Title = model.Title,
                 Content = model.Content,
-                AuthorId = currentUser.Id,
+                AuthorId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 PublishedAt = DateTime.UtcNow,
-                IsPublished = currentUser.IsAdmin // Only admins can publish directly
+                IsPublished = User.IsInRole("Admin") // Only admins can publish directly
             };
 
             if (model.CoverImage != null)
@@ -143,21 +130,12 @@ namespace APS.Controllers
             var article = await _context.Articles
                 .Include(a => a.Images)
                 .FirstOrDefaultAsync(a => a.Id == id);
-
             if (article == null)
             {
                 return NotFound();
             }
 
-            var currentUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-
-            if (currentUser == null)
-            {
-                return Forbid();
-            }
-
-            if (!currentUser.IsAdmin && article.AuthorId != currentUser.Id)
+            if (!User.IsInRole("Admin") && article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
                 return Forbid();
             }
@@ -198,15 +176,7 @@ namespace APS.Controllers
                 return NotFound();
             }
 
-            var currentUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-
-            if (currentUser == null)
-            {
-                return Forbid();
-            }
-
-            if (!currentUser.IsAdmin && article.AuthorId != currentUser.Id)
+            if (!User.IsInRole("Admin") && article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
                 return Forbid();
             }
@@ -300,10 +270,7 @@ namespace APS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var currentUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
-
-            if (currentUser == null)
+            if (!User.Identity.IsAuthenticated)
             {
                 return Forbid();
             }
@@ -320,9 +287,9 @@ namespace APS.Controllers
             var comment = new ArticleComment
             {
                 ArticleId = model.ArticleId,
-                UserId = currentUser.Id,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 Content = model.Content,
-                IsApproved = currentUser.IsAdmin || currentUser.IsModerator
+                IsApproved = User.IsInRole("Admin") || User.IsInRole("Moderator")
             };
 
             article.Comments.Add(comment);

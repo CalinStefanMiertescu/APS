@@ -4,30 +4,30 @@
     ViewData["Title"] = "Articles";
 }
 
-<div class="articles-container">
-    <div class="articles-header">
-        <h1 class="articles-title">Articles</h1>
+<div class="modern-articles-container">
+    <div class="modern-articles-header">
+        <h1 class="modern-articles-title">Articles</h1>
         @if (Model.IsAdmin || Model.IsModerator)
         {
-            <a href="@Url.Action("Create")" class="btn btn-primary">
+            <a href="@Url.Action("Create")" class="modern-btn modern-btn-primary">
                 <i class="fas fa-plus"></i> Create Article
             </a>
         }
     </div>
 
-    <div class="articles-grid">
+    <div class="modern-articles-grid">
         @foreach (var article in Model.Articles)
         {
-            <div class="article-card">
+            <div class="modern-article-card glass-card">
                 @if (!string.IsNullOrEmpty(article.CoverImageUrl))
                 {
-                    <div class="article-cover">
+                    <div class="modern-article-cover">
                         <img src="@article.CoverImageUrl" alt="@article.Title">
                     </div>
                 }
-                <div class="article-content">
-                    <h2 class="article-title">@article.Title</h2>
-                    <div class="article-meta">
+                <div class="modern-article-content">
+                    <h2 class="modern-article-title">@article.Title</h2>
+                    <div class="modern-article-meta">
                         <span class="author">
                             <i class="fas fa-user"></i> @article.AuthorName
                         </span>
@@ -35,16 +35,16 @@
                             <i class="fas fa-calendar"></i> @article.PublishedAt.ToString("MMMM dd, yyyy")
                         </span>
                     </div>
-                    <div class="article-text">
+                    <div class="modern-article-text">
                         @Html.Raw(article.Content.Length > 300 ? article.Content.Substring(0, 300) + "..." : article.Content)
                     </div>
-                    <div class="article-actions">
-                        <a href="@Url.Action("Details", new { id = article.Id })" class="btn btn-primary">
+                    <div class="modern-article-actions">
+                        <a href="@Url.Action("Details", new { id = article.Id })" class="modern-btn modern-btn-primary">
                             Read More
                         </a>
                         @if (Model.IsAdmin || (Model.IsModerator && article.AuthorId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
                         {
-                            <a href="@Url.Action("Edit", new { id = article.Id })" class="btn btn-secondary">
+                            <a href="@Url.Action("Edit", new { id = article.Id })" class="modern-btn modern-btn-secondary">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                         }
@@ -54,14 +54,14 @@
                             {
                                 <form asp-action="Publish" method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@article.Id" />
-                                    <button type="submit" class="btn btn-success">
+                                    <button type="submit" class="modern-btn modern-btn-success">
                                         <i class="fas fa-check"></i> Publish
                                     </button>
                                 </form>
                             }
                             <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
                                 <input type="hidden" name="id" value="@article.Id" />
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="modern-btn modern-btn-danger">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </form>
@@ -75,4 +75,5 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/articles.css" />
+    <link rel="stylesheet" href="~/css/modern.css" />
 } 

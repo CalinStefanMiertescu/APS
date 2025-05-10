@@ -139,4 +139,90 @@ body, .main-content {
 ::-webkit-scrollbar {
     width: 0;
     background: transparent;
+}
+
+.modern-sidebar-links {
+    gap: 1.1rem !important;
+}
+.modern-sidebar-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: #232b36 !important;
+    color: #e0e6ed !important;
+    font-weight: 600;
+    border-radius: 1rem;
+    padding: 1.1rem 1.2rem;
+    font-size: 1.08rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border: none;
+    margin-bottom: 1.1rem;
+    transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+    text-decoration: none !important;
+    outline: none;
+}
+.modern-sidebar-btn:focus,
+.modern-sidebar-btn:active,
+.modern-sidebar-btn:hover {
+    background: #1a223f !important;
+    color: #00cfff !important;
+    box-shadow: 0 0 0 3px #1ec8fc, 0 4px 16px rgba(30,200,252,0.10);
+    text-decoration: none !important;
+}
+.modern-sidebar-btn i {
+    font-size: 1.25rem;
+    color: #00cfff;
+    min-width: 1.7rem;
+    text-align: center;
+}
+.modern-sidebar-btn span {
+    flex: 1;
+    text-align: left;
+}
+.modern-sidebar-btn:focus i,
+.modern-sidebar-btn:active i,
+.modern-sidebar-btn:hover i {
+    color: #fff;
+}
+
+.spectacular-logout-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 0.5rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.98rem;
+    box-shadow: 0 2px 12px rgba(255,65,108,0.10);
+    border: none;
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+    transition: background 0.18s, box-shadow 0.18s, color 0.18s, transform 0.18s;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.spectacular-logout-link i {
+    color: #fff;
+    font-size: 1.08rem;
+}
+
+.spectacular-logout-link:hover,
+.spectacular-logout-link:focus {
+    background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
+    color: #fff;
+    box-shadow: 0 0 0 3px #ff416c, 0 4px 16px #ff4b2b44;
+    transform: translateY(-2px) scale(1.03);
+    text-decoration: none;
+}
+
+.spectacular-logout-link:active {
+    background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+    color: #fff;
+    box-shadow: 0 0 0 2px #ff4b2b, 0 2px 8px #ff416c33;
 } 

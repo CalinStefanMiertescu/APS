@@ -4,6 +4,7 @@ wwwroot\css\common.css
 wwwroot\css\dashboard.css
 wwwroot\css\login.css
 wwwroot\css\member.css
+wwwroot\css\modern.css
 wwwroot\css\register.css
 wwwroot\css\registration-success.css
 wwwroot\css\sidebar.css
@@ -76,12 +77,16 @@ wwwroot\lib\jquery\LICENSE.txt
 wwwroot\uploads\profile-pictures\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824099137824758.jpg
 wwwroot\uploads\profile-pictures\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824099243526916.jpg
 wwwroot\uploads\profile-pictures\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824113122083828.jpg
+wwwroot\uploads\profile-pictures\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824293058597364.jpg
+wwwroot\uploads\profile-pictures\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824293189981537.jpg
+wwwroot\uploads\profile-pictures\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824294122230676.jpg
 E:\APS\wwwroot\css\admin.css
 E:\APS\wwwroot\css\articles.css
 E:\APS\wwwroot\css\common.css
 E:\APS\wwwroot\css\dashboard.css
 E:\APS\wwwroot\css\login.css
 E:\APS\wwwroot\css\member.css
+E:\APS\wwwroot\css\modern.css
 E:\APS\wwwroot\css\register.css
 E:\APS\wwwroot\css\registration-success.css
 E:\APS\wwwroot\css\sidebar.css

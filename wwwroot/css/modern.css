@@ -1,0 +1,373 @@
+:root {
+    --modern-bg: #10172b;
+    --modern-card-bg: #1a223f;
+    --modern-glass: rgba(26,34,63,0.85);
+    --modern-border: #22305a;
+    --modern-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    --modern-primary: #00cfff;
+    --modern-success: #1fd655;
+    --modern-danger: #ff4c60;
+    --modern-warning: #ffc542;
+    --modern-info: #1ec8fc;
+    --modern-cyan: #00cfff;
+    --modern-green: #1fd655;
+    --modern-yellow: #ffc542;
+    --modern-red: #ff4c60;
+    --modern-text: #e0e6ed;
+    --modern-muted: #7a869a;
+}
+
+body, .modern-articles-container, .modern-admin-container, .modern-create-article-container {
+    background: var(--modern-bg) !important;
+    color: var(--modern-text) !important;
+}
+
+.glass-card {
+    background: var(--modern-glass);
+    border-radius: 24px;
+    box-shadow: var(--modern-shadow);
+    border: 1.5px solid var(--modern-border);
+    backdrop-filter: blur(8px);
+}
+
+/* Modern Articles Page */
+.modern-articles-container {
+    padding: 2.5rem 2rem;
+    min-height: 100vh;
+}
+.modern-articles-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+.modern-articles-title {
+    font-size: 2.5rem;
+    color: var(--modern-primary);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+}
+.modern-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2.2rem;
+}
+.modern-article-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: var(--modern-shadow);
+    background: var(--modern-card-bg);
+    display: flex;
+    flex-direction: column;
+}
+.modern-article-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.28);
+}
+.modern-article-cover {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+}
+.modern-article-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+.modern-article-card:hover .modern-article-cover img {
+    transform: scale(1.05);
+}
+.modern-article-content {
+    padding: 1.7rem 1.5rem 1.2rem 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.modern-article-title {
+    font-size: 1.45rem;
+    color: var(--modern-primary);
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+}
+.modern-article-meta {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: var(--modern-muted);
+}
+.modern-article-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.modern-article-text {
+    color: var(--modern-text);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    font-size: 1.08rem;
+}
+.modern-article-actions {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+/* Modern Buttons */
+.modern-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 0.7rem 1.4rem;
+    font-size: 1.08rem;
+    border: none;
+    outline: none;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    cursor: pointer;
+    text-decoration: none;
+}
+.modern-btn-primary {
+    background: var(--modern-primary);
+    color: #fff;
+}
+.modern-btn-primary:hover, .modern-btn-primary:focus {
+    background: #1ec8fc;
+    color: #fff;
+}
+.modern-btn-secondary {
+    background: #232b36;
+    color: var(--modern-primary);
+    border: 1.5px solid var(--modern-primary);
+}
+.modern-btn-secondary:hover, .modern-btn-secondary:focus {
+    background: var(--modern-primary);
+    color: #fff;
+}
+.modern-btn-success {
+    background: var(--modern-success);
+    color: #fff;
+}
+.modern-btn-danger {
+    background: var(--modern-danger);
+    color: #fff;
+}
+.modern-btn-info {
+    background: var(--modern-info);
+    color: #fff;
+}
+
+/* Modern Create/Edit Article Form */
+.modern-create-article-container {
+    padding: 2.5rem 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.modern-create-article-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+.modern-create-article-title {
+    font-size: 2.2rem;
+    color: var(--modern-primary);
+    font-weight: 700;
+    margin: 0;
+}
+.modern-create-article-form {
+    background: var(--modern-glass);
+    padding: 2.5rem 2rem;
+    border-radius: 24px;
+    box-shadow: var(--modern-shadow);
+    max-width: 600px;
+    width: 100%;
+}
+.modern-form-group {
+    margin-bottom: 1.5rem;
+}
+.modern-form-label {
+    display: block;
+    font-weight: 500;
+    color: var(--modern-primary);
+    margin-bottom: 0.5rem;
+}
+.modern-form-control {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1.5px solid var(--modern-border);
+    border-radius: 10px;
+    background: #232b36;
+    color: var(--modern-text);
+    font-size: 1.08rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.modern-form-control:focus {
+    border-color: var(--modern-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0,207,255,0.18);
+}
+.modern-image-input-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+.modern-image-input-group .modern-form-control {
+    flex: 1;
+}
+.modern-form-actions {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 2rem;
+}
+
+/* Modern Admin Dashboard */
+.modern-admin-container {
+    padding: 2.5rem 2rem;
+    min-height: 100vh;
+}
+.modern-admin-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+.modern-admin-title {
+    font-size: 2.5rem;
+    color: var(--modern-primary);
+    font-weight: 700;
+    margin: 0;
+}
+.modern-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.modern-stat-card {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 18px;
+    background: var(--modern-card-bg);
+    box-shadow: var(--modern-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.modern-stat-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.28);
+}
+.modern-stat-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.2rem;
+    font-size: 2rem;
+    color: #fff;
+}
+.bg-cyan { background: var(--modern-cyan); }
+.bg-green { background: var(--modern-green); }
+.bg-yellow { background: var(--modern-warning); }
+.bg-red { background: var(--modern-danger); }
+.modern-stat-info h3 {
+    font-size: 1.1rem;
+    color: var(--modern-muted);
+    margin: 0;
+}
+.modern-stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--modern-primary);
+    margin: 0.5rem 0 0;
+}
+.modern-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 1.5rem;
+}
+.modern-admin-card {
+    background: var(--modern-card-bg);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: var(--modern-shadow);
+}
+.modern-card-title {
+    font-size: 1.3rem;
+    color: var(--modern-primary);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #22305a;
+}
+.modern-table {
+    width: 100%;
+    color: var(--modern-text);
+    background: transparent;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+.modern-table th {
+    font-weight: 600;
+    color: var(--modern-muted);
+    border-top: none;
+    background: #232b36;
+    padding: 0.7rem 0.5rem;
+}
+.modern-table td {
+    vertical-align: middle;
+    background: #232b36;
+    padding: 0.7rem 0.5rem;
+    border-bottom: 1.5px solid #22305a;
+}
+.btn-sm {
+    padding: 0.25rem 0.7rem;
+    font-size: 0.95rem;
+    margin: 0 0.18rem;
+}
+.modern-type-management {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+.modern-type-section h3 {
+    font-size: 1.1rem;
+    color: var(--modern-primary);
+    margin-bottom: 1rem;
+}
+.modern-type-list {
+    margin-bottom: 1rem;
+}
+.modern-type-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.7rem;
+    background: #232b36;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+.modern-type-item span {
+    color: var(--modern-text);
+}
+.modern-add-type {
+    display: flex;
+    gap: 0.5rem;
+}
+.modern-add-type input {
+    flex: 1;
+}
+
+@media (max-width: 900px) {
+    .modern-articles-grid, .modern-admin-grid {
+        grid-template-columns: 1fr;
+    }
+    .modern-create-article-form {
+        padding: 1.2rem 0.5rem;
+    }
+} 

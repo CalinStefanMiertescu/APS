@@ -9,14 +9,9 @@ using APS.Data;
 
 namespace APS.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly APSContext _context;
-
-        public HomeController(APSContext context)
-        {
-            _context = context;
-        }
+        public HomeController(APSContext context) : base(context) { }
 
         public async Task<IActionResult> Index()
         {
