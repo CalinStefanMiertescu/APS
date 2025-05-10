@@ -29,11 +29,13 @@
                                 <span class="material-icons">home</span>
                                 <span>Home</span>
                             </a>
+                        }@if (Model?.IsAdmin == true)
+                        {
+                            <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
+                                <span class="material-icons">admin_panel_settings</span>
+                                <span>Admin Dashboard</span>
+                            </a>
                         }
-                        <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
-                            <span class="material-icons">admin_panel_settings</span>
-                            <span>Admin Dashboard</span>
-                        </a>
                     }
                     @* Create News page: Home, News, Admin Dashboard *@
                     else if (currentController == "Article" && currentAction == "Create")
@@ -45,14 +47,18 @@
                                 <span>Home</span>
                             </a>
                         }
+
                         <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
                             <span class="material-icons">article</span>
                             <span>News</span>
                         </a>
-                        <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
-                            <span class="material-icons">admin_panel_settings</span>
-                            <span>Admin Dashboard</span>
-                        </a>
+                        @if (Model?.IsAdmin == true)
+                        {
+                            <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
+                                <span class="material-icons">admin_panel_settings</span>
+                                <span>Admin Dashboard</span>
+                            </a>
+                        }
                     }
                     @* Admin Dashboard: Home, News, Create News *@
                     else if (currentController == "Admin")
@@ -68,10 +74,13 @@
                             <span class="material-icons">article</span>
                             <span>News</span>
                         </a>
-                        <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn @(currentController == "Article" && currentAction == "Create" ? "active" : "")">
-                            <span class="material-icons">add_circle</span>
-                            <span>Create News</span>
-                        </a>
+                        @if (Model?.IsAdmin == true)
+                        {
+                            <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn @(currentController == "Article" && currentAction == "Create" ? "active" : "")">
+                                <span class="material-icons">add_circle</span>
+                                <span>Create News</span>
+                            </a>
+                        }
                     }
                     @* Default: Home, News, Create News, Admin Dashboard *@
                     else
@@ -87,14 +96,17 @@
                             <span class="material-icons">article</span>
                             <span>News</span>
                         </a>
-                        <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn">
-                            <span class="material-icons">add_circle</span>
-                            <span>Create News</span>
-                        </a>
-                        <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
-                            <span class="material-icons">admin_panel_settings</span>
-                            <span>Admin Dashboard</span>
-                        </a>
+                        @if (Model?.IsAdmin == true)
+                        {
+                            <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn">
+                                <span class="material-icons">add_circle</span>
+                                <span>Create News</span>
+                            </a>
+                            <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
+                                <span class="material-icons">admin_panel_settings</span>
+                                <span>Admin Dashboard</span>
+                            </a>
+                        }
                     }
                 </div>
             </div>

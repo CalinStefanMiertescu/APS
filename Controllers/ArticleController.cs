@@ -71,14 +71,14 @@ namespace APS.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Create()
         {
             return View(new CreateArticleViewModel());
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Create(CreateArticleViewModel model)
         {
             if (!ModelState.IsValid)
@@ -124,7 +124,7 @@ namespace APS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Edit(int id)
         {
             var article = await _context.Articles
@@ -159,7 +159,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Edit(EditArticleViewModel model)
         {
             if (!ModelState.IsValid)
@@ -216,7 +216,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Publish(int id)
         {
             var article = await _context.Articles.FindAsync(id);
@@ -232,7 +232,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> Delete(int id)
         {
             var article = await _context.Articles
@@ -299,7 +299,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> ApproveComment(int id)
         {
             var article = await _context.Articles
@@ -319,7 +319,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Moderator")]
+        [Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var article = await _context.Articles

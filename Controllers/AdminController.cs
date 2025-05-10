@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace APS.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "RequireAdmin")]
     public class AdminController : BaseController
     {
         public AdminController(APSContext context) : base(context) { }
