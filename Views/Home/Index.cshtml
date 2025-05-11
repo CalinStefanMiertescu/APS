@@ -89,6 +89,28 @@
                             <div class="col-12 text-center text-muted">Nu există anunțuri încă.</div>
                         }
                     </div>
+                    <hr />
+                    <div class="row g-3">
+                        <h5 class="card-title mb-3">Articole recente</h5>
+                        @if (Model.LatestArticles != null && Model.LatestArticles.Any())
+                        {
+                            @foreach (var article in Model.LatestArticles)
+                            {
+                                <div class="col-md-4">
+                                    <div class="announcement-card bg-dark text-light p-3 rounded h-100">
+                                        <h6 class="fw-bold">@article.Title</h6>
+                                        <p class="mb-1">@((article.Content.Length > 100 ? article.Content.Substring(0, 100) + "..." : article.Content))</p>
+                                        <small class="text-muted">@article.PublishedAt?.ToString("dd MMMM yyyy")</small>
+                                        <a href="@Url.Action("Details", "Article", new { id = article.Id })" class="btn btn-info btn-sm mt-2">Citește mai mult</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12 text-center text-muted">Nu există articole recente.</div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

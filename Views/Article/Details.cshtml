@@ -1,0 +1,43 @@
+@model APS.Models.ViewModels.ArticleViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+<div class="modern-article-details-container">
+    <div class="modern-article-details-header">
+        <h1 class="modern-article-details-title">@Model.Title</h1>
+        <div class="modern-article-details-meta">
+            <span><i class="fas fa-user"></i> @Model.AuthorName</span>
+            <span><i class="fas fa-calendar"></i> @Model.PublishedAt.ToString("MMMM dd, yyyy")</span>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+    {
+        <div class="modern-article-details-cover">
+            <img src="@Model.CoverImageUrl" alt="@Model.Title" />
+        </div>
+    }
+    <div class="modern-article-details-content">
+        @Html.Raw(Model.Content)
+    </div>
+    @if (Model.Images != null && Model.Images.Count > 0)
+    {
+        <div class="modern-article-details-images">
+            <h3>Additional Images</h3>
+            <div class="modern-article-details-images-list">
+                @foreach (var img in Model.Images)
+                {
+                    <div class="modern-article-details-image-item">
+                        <img src="@img.ImageUrl" alt="@img.Caption" />
+                        <div class="modern-article-details-image-caption">@img.Caption</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <a href="@Url.Action("Index")" class="modern-btn modern-btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/articles.css" />
+    <link rel="stylesheet" href="~/css/modern.css" />
+} 

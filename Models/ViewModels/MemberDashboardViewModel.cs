@@ -43,5 +43,6 @@ namespace APS.Models.ViewModels
         public int ActiveMembersCount { get; set; }
         public int PendingApprovalsCount { get; set; }
         public List<APS.Models.Announcement> Announcements { get; set; } = new List<APS.Models.Announcement>();
+        public List<APS.Models.Article> LatestArticles { get; set; } = new List<APS.Models.Article>();
     }
 } 

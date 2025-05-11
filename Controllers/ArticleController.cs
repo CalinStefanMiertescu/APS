@@ -72,7 +72,7 @@ namespace APS.Controllers
         }
 
         [Authorize(Policy = "RequireAdmin")]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View(new CreateArticleViewModel());
         }
@@ -86,13 +86,21 @@ namespace APS.Controllers
                 return View(model);
             }
 
+            var defaultCategory = await _context.Categories.FirstOrDefaultAsync();
+            if (defaultCategory == null)
+            {
+                ModelState.AddModelError(string.Empty, "No categories exist in the system. Please add one in the database.");
+                return View(model);
+            }
+
             var article = new Article
             {
                 Title = model.Title,
                 Content = model.Content,
                 AuthorId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                CategoryId = defaultCategory.Id,
                 PublishedAt = DateTime.UtcNow,
-                IsPublished = User.IsInRole("Admin") // Only admins can publish directly
+                IsPublished = true // Always publish on creation
             };
 
             if (model.CoverImage != null)
@@ -336,6 +344,39 @@ namespace APS.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var article = await _context.Articles
+                .Include(a => a.Author)
+                .Include(a => a.Images)
+                .FirstOrDefaultAsync(a => a.Id == id && a.IsPublished);
+            if (article == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new ArticleViewModel
+            {
+                Id = article.Id,
+                Title = article.Title,
+                Content = article.Content,
+                CoverImageUrl = article.CoverImageUrl,
+                PublishedAt = article.PublishedAt ?? DateTime.MinValue,
+                UpdatedAt = article.UpdatedAt,
+                IsPublished = article.IsPublished,
+                AuthorId = article.AuthorId,
+                AuthorName = article.Author != null ? $"{article.Author.FirstName} {article.Author.LastName}" : "Unknown",
+                Images = article.Images?.Select(i => new ArticleImageViewModel
+                {
+                    Id = i.Id,
+                    ImageUrl = i.ImageUrl,
+                    Caption = i.Caption,
+                    DisplayOrder = i.DisplayOrder
+                }).ToList() ?? new List<ArticleImageViewModel>(),
+                Comments = new List<ArticleCommentViewModel>()
+            };
+            return View(viewModel);
         }
 
         private async Task<string> SaveImage(IFormFile file)

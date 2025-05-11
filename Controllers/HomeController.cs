@@ -28,6 +28,12 @@ namespace APS.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            var latestArticles = await _context.Articles
+                .Where(a => a.IsPublished)
+                .OrderByDescending(a => a.PublishedAt)
+                .Take(5)
+                .ToListAsync();
+
             var viewModel = new MemberDashboardViewModel
             {
                 FirstName = currentUser.FirstName,
@@ -48,6 +54,7 @@ namespace APS.Controllers
                     .OrderByDescending(a => a.CreatedAt)
                     .Take(5)
                     .ToListAsync(),
+                LatestArticles = latestArticles,
                 IsAdmin = currentUser.IsAdmin,
                 Role = currentUser.IsAdmin ? "Admin" : (currentUser.IsModerator ? "Moderator" : "User")
             };
