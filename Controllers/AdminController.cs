@@ -52,7 +52,12 @@ namespace APS.Controllers
                     .Distinct()
                     .ToListAsync(),
                 ActiveMembers = await usersQuery.Where(u => u.IsActive && u.IsPayingMember).ToListAsync(),
-                NonPayingMembers = await usersQuery.Where(u => u.IsActive && !u.IsPayingMember).ToListAsync()
+                NonPayingMembers = await usersQuery.Where(u => u.IsActive && !u.IsPayingMember).ToListAsync(),
+                 // Add this to include categories
+                Categories = await _context.Categories
+                    .Include(c => c.Articles)
+                    .ToListAsync()
+
             };
 
             return View(viewModel);
@@ -218,6 +223,74 @@ namespace APS.Controllers
                 return NotFound();
             }
             return Json(user.PendingChangesJson);
+        }
+        [HttpPost]
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check for duplicate name (case-insensitive)
+                bool exists = await _context.Categories
+                    .AnyAsync(c => c.Name.ToLower() == category.Name.ToLower());
+                if (exists)
+                {
+                    TempData["CategoryError"] = "A category with this name already exists.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                category.CreatedAt = DateTime.UtcNow;
+                _context.Categories.Add(category);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["CategoryError"] = "Invalid category data.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingCategory = await _context.Categories.FindAsync(category.Id);
+                if (existingCategory != null)
+                {
+                    existingCategory.Name = category.Name;
+                    existingCategory.Description = category.Description;
+                    existingCategory.UpdatedAt = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory(int categoryId)
+        {
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category != null)
+            {
+                // Check if there are associated articles
+                var hasArticles = await _context.Articles.AnyAsync(a => a.CategoryId == categoryId);
+                if (!hasArticles)
+                {
+                    _context.Categories.Remove(category);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCategory(int categoryId)
+        {
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return Json(category);
         }
     }
 } 

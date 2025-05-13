@@ -16,5 +16,7 @@ namespace APS.Models.ViewModels
         public List<string> Publications { get; set; } = new List<string>();
         public List<User> ActiveMembers { get; set; } = new List<User>();
         public List<User> NonPayingMembers { get; set; } = new List<User>();
+        public List<Category> Categories { get; set; } = new List<Category>();
+
     }
 } 
