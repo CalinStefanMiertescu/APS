@@ -57,8 +57,8 @@ namespace APS.Controllers
                     Images = a.Images?.Select(i => new ArticleImageViewModel
                     {
                         Id = i.Id,
-                        ImageUrl = i.ImageUrl,
-                        Caption = i.Caption,
+                        ImageUrl = i.ImageUrl ?? string.Empty,
+                        Caption = i.Caption ?? string.Empty,
                         DisplayOrder = i.DisplayOrder
                     }).ToList() ?? new List<ArticleImageViewModel>(),
                     Comments = a.Comments
@@ -66,11 +66,13 @@ namespace APS.Controllers
                         .Select(c => new ArticleCommentViewModel
                         {
                             Id = c.Id,
-                            Content = c.Content,
+                            Content = c.Content ?? string.Empty,
                             CreatedAt = c.CreatedAt,
                             UserName = c.User != null ? $"{c.User.FirstName} {c.User.LastName}" : "Unknown",
                             IsApproved = c.IsApproved
-                        }).ToList()
+                        }).ToList(),
+                    CategoryId = a.CategoryId,
+                    CategoryName = a.Category?.Name ?? ""
                 }).ToList(),
                 IsAdmin = isAdmin,
                 IsModerator = isModerator
@@ -386,7 +388,10 @@ namespace APS.Controllers
                     Caption = i.Caption,
                     DisplayOrder = i.DisplayOrder
                 }).ToList() ?? new List<ArticleImageViewModel>(),
-                Comments = new List<ArticleCommentViewModel>()
+                Comments = new List<ArticleCommentViewModel>(),
+                IsAdmin = User.IsInRole("Admin"),
+                CategoryId = article.CategoryId,
+                CategoryName = article.Category?.Name ?? ""
             };
 
             return View(viewModel);

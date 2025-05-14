@@ -237,18 +237,20 @@
                                 <td>@category.Name</td>
                                 <td>@(category.Articles?.Count ?? 0)</td>
                                 <td class="text-end">
-                                    <button class="modern-btn modern-btn-info btn-sm" type="button"
-                                            data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-                                            onclick="prepareEditCategory(@category.Id, '@category.Name')">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <form method="post" action="/Admin/DeleteCategory" style="display:inline;">
-                                        <input type="hidden" name="categoryId" value="@category.Id" />
-                                        <button type="submit" class="modern-btn modern-btn-danger btn-sm ms-2"
-                                                onclick="return confirm('@(category.Articles?.Count > 0 ? "This category has articles. Are you sure you want to delete it?" : "Are you sure you want to delete this category?")')">
-                                            <i class="fas fa-trash"></i> Delete
+                                    <div class="action-buttons" style="display: flex; gap: 0.5rem; align-items: center; justify-content: flex-end;">
+                                        <button class="modern-btn modern-btn-info btn-sm" type="button"
+                                                data-bs-toggle="modal" data-bs-target="#editCategoryModal"
+                                                onclick="prepareEditCategory(@category.Id, '@category.Name')">
+                                            <i class="fas fa-edit"></i> Edit
                                         </button>
-                                    </form>
+                                        <form method="post" action="/Admin/DeleteCategory" style="display:inline; margin:0; padding:0;">
+                                            <input type="hidden" name="categoryId" value="@category.Id" />
+                                            <button type="submit" class="modern-btn modern-btn-danger btn-sm"
+                                                    onclick="return confirm('@(category.Articles?.Count > 0 ? "This category has articles. Are you sure you want to delete it?" : "Are you sure you want to delete this category?")')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -371,13 +373,31 @@
         }
         function approveChanges(userId) {
             if (confirm('Are you sure you want to approve these changes?')) {
-                $.post('/Admin/ApproveChanges', { userId: userId }, function() { location.reload(); });
+                $.ajax({
+                    url: '/Admin/ApproveChanges',
+                    method: 'POST',
+                    data: { userId: userId },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .done(function() { location.reload(); })
+                .fail(function(xhr) {
+                    alert('Failed to approve changes: ' + (xhr.responseJSON?.message || xhr.statusText));
+                });
             }
         }
         function rejectChanges(userId) {
             const reason = prompt('Please enter rejection reason:');
             if (reason) {
-                $.post('/Admin/RejectChanges', { userId: userId, reason: reason }, function() { location.reload(); });
+                $.ajax({
+                    url: '/Admin/RejectChanges',
+                    method: 'POST',
+                    data: { userId: userId, reason: reason },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .done(function() { location.reload(); })
+                .fail(function(xhr) {
+                    alert('Failed to reject changes: ' + (xhr.responseJSON?.message || xhr.statusText));
+                });
             }
         }
         function addType(type) {

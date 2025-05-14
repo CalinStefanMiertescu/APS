@@ -2,42 +2,61 @@
 @{
     ViewData["Title"] = Model.Title;
 }
-<div class="modern-article-details-container">
-    <div class="modern-article-details-header">
-        <h1 class="modern-article-details-title">@Model.Title</h1>
-        <div class="modern-article-details-meta">
-            <span><i class="fas fa-user"></i> @Model.AuthorName</span>
-            <span><i class="fas fa-calendar"></i> @Model.PublishedAt.ToString("MMMM dd, yyyy")</span>
-            <span><i class="fas fa-tag"></i> @Model.CategoryName</span>
+<div style="width: 100%; max-width: 1200px; margin: 2.5rem auto;">
+    <div style="border-radius: 2rem 2rem 0 0; overflow: hidden; box-shadow: 0 8px 32px #000a;">
+        <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #222;">
+            @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+            {
+                <img src="@Model.CoverImageUrl" alt="@Model.Title"
+                     style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            }
+            @if (!string.IsNullOrEmpty(Model.CategoryName))
+            {
+                <span style="position: absolute; top: 1.5rem; left: 2rem; background: #ffc107; color: #232b36; font-weight: 700; font-size: 1.05rem; border-radius: 999px; padding: 0.22em 1.1em; box-shadow: 0 2px 8px #0003; letter-spacing: 0.5px; z-index: 2;">
+                    @Model.CategoryName.ToUpper()
+                </span>
+            }
         </div>
     </div>
-    @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
-    {
-        <div class="modern-article-details-cover">
-            <img src="@Model.CoverImageUrl" alt="@Model.Title" />
-        </div>
-    }
-    <div class="modern-article-details-content">
-        @Html.Raw(Model.Content)
-    </div>
-    @if (Model.Images != null && Model.Images.Count > 0)
-    {
-        <div class="modern-article-details-images">
-            <h3>Additional Images</h3>
-            <div class="modern-article-details-images-list">
-                @foreach (var img in Model.Images)
-                {
-                    <div class="modern-article-details-image-item">
-                        <img src="@img.ImageUrl" alt="@img.Caption" />
-                        <div class="modern-article-details-image-caption">@img.Caption</div>
-                    </div>
-                }
+    <div style="background: #232b36; border-radius: 0 0 2rem 2rem; box-shadow: 0 8px 32px #000a; padding: 2.5rem 2.5rem 2rem 2.5rem; margin-bottom: 0;">
+        <h1 style="font-size:2.6rem; font-weight:900; color:#00cfff; margin-bottom:0.7rem; letter-spacing:-1px;">
+            @Model.Title
+        </h1>
+        @if (!string.IsNullOrEmpty(Model.Lead))
+        {
+            <div style="font-size:1.3rem; color:#b0b8c1; margin-bottom:1.5rem; font-weight:500;">
+                @Model.Lead
             </div>
+        }
+        <div style="display:flex; gap:2rem; align-items:center; margin-bottom:2rem;">
+            <span style="color:#b0b8c1;"><i class="fas fa-user"></i> @Model.AuthorName</span>
+            <span style="color:#b0b8c1;"><i class="fas fa-calendar"></i> @Model.PublishedAt.ToString("dd MMMM yyyy")</span>
+            <span>style="color:#b0b8c1;"><i class="fas fa-tag"></i> @Model.CategoryName</span>
         </div>
-    }
-    <a href="@Url.Action("Index")" class="modern-btn modern-btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+        <div style="color:#e0e6ed; font-size:1.18rem; line-height:1.7; margin-bottom:2.5rem;">
+            @Html.Raw(Model.Content)
+        </div>
+        <div>
+            <a href="@Url.Action("Index")" class="btn btn-info btn-lg" style="border-radius: 999px; font-weight: 700;">
+                <i class="fas fa-arrow-left"></i> Înapoi la articole
+            </a>
+            @if (Model.IsAdmin)
+            {
+                <div style="display: inline-flex; gap: 1rem; margin-left: 1rem;">
+                    <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning" style="font-weight: 700;">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <form asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this article?');">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-danger" style="font-weight: 700;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
 </div>
-
 @section Styles {
     <link rel="stylesheet" href="~/css/articles.css" />
     <link rel="stylesheet" href="~/css/modern.css" />
