@@ -84,6 +84,9 @@ namespace APS.Controllers
                 if (await _context.Users.AnyAsync(u => u.Email == model.Email))
                 {
                     ModelState.AddModelError("Email", "Email already in use.");
+                    // Repopulate dropdowns before returning view
+                    model.Cities = RomanianCities;
+                    model.Publications = FictionalPublishers;
                     return View(model);
                 }
 
@@ -115,6 +118,9 @@ namespace APS.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+            // Repopulate dropdowns before returning view
+            model.Cities = RomanianCities;
+            model.Publications = FictionalPublishers;
             return View(model);
         }
 

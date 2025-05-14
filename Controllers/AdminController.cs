@@ -99,9 +99,10 @@ namespace APS.Controllers
             var user = await _context.Users.FindAsync(userId);
             if (user == null || string.IsNullOrEmpty(user.PendingChangesJson))
             {
+                TempData["AdminMessage"] = "User not found or no pending changes.";
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                     return Json(new { success = false, message = "User not found or no pending changes." });
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             try
@@ -112,16 +113,44 @@ namespace APS.Controllers
                     var property = typeof(User).GetProperty(change.Key);
                     if (property != null)
                     {
-                        property.SetValue(user, Convert.ChangeType(change.Value, property.PropertyType));
+                        var targetType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        var valueStr = change.Value?.ToString();
+                        if (targetType == typeof(string))
+                        {
+                            property.SetValue(user, valueStr);
+                        }
+                        else if (targetType == typeof(bool))
+                        {
+                            if (bool.TryParse(valueStr, out var boolVal))
+                                property.SetValue(user, boolVal);
+                        }
+                        else if (targetType == typeof(int))
+                        {
+                            if (int.TryParse(valueStr, out var intVal))
+                                property.SetValue(user, intVal);
+                        }
+                        else if (targetType == typeof(DateTime))
+                        {
+                            if (DateTime.TryParse(valueStr, out var dtVal))
+                                property.SetValue(user, dtVal);
+                        }
+                        else if (targetType == typeof(Guid))
+                        {
+                            if (Guid.TryParse(valueStr, out var guidVal))
+                                property.SetValue(user, guidVal);
+                        }
+                        // else skip unsupported/complex types
                     }
                 }
 
                 user.HasPendingChanges = false;
                 user.PendingChangesJson = null;
                 await _context.SaveChangesAsync();
+                TempData["AdminMessage"] = "User changes approved.";
             }
             catch (Exception ex)
             {
+                TempData["AdminMessage"] = "Error approving changes: " + ex.Message;
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                     return Json(new { success = false, message = "Error approving changes: " + ex.Message });
                 throw;
@@ -133,19 +162,21 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RejectChanges(string userId, string reason)
+        public async Task<IActionResult> RejectChanges(string userId)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
+                TempData["AdminMessage"] = "User not found.";
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                     return Json(new { success = false, message = "User not found." });
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             user.HasPendingChanges = false;
             user.PendingChangesJson = null;
             await _context.SaveChangesAsync();
+            TempData["AdminMessage"] = "User changes rejected.";
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 return Json(new { success = true });

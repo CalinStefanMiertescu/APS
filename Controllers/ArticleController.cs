@@ -71,8 +71,7 @@ namespace APS.Controllers
                             UserName = c.User != null ? $"{c.User.FirstName} {c.User.LastName}" : "Unknown",
                             IsApproved = c.IsApproved
                         }).ToList(),
-                    CategoryId = a.CategoryId,
-                    CategoryName = a.Category?.Name ?? ""
+                    CategoryId = a.CategoryId
                 }).ToList(),
                 IsAdmin = isAdmin,
                 IsModerator = isModerator
@@ -123,15 +122,15 @@ namespace APS.Controllers
             await _context.SaveChangesAsync();
 
             // Handle additional images
-            for (int i = 0; i < model.AdditionalImages.Count; i++)
+            for (int i = 0; i < (model.AdditionalImages?.Count ?? 0); i++)
             {
-                if (model.AdditionalImages[i] != null)
+                if (model.AdditionalImages?[i] != null)
                 {
                     var image = new ArticleImage
                     {
                         ArticleId = article.Id,
                         ImageUrl = await SaveImage(model.AdditionalImages[i]),
-                        Caption = model.ImageCaptions[i],
+                        Caption = model.ImageCaptions != null && model.ImageCaptions.Count > i ? model.ImageCaptions[i] : string.Empty,
                         DisplayOrder = i
                     };
                     article.Images.Add(image);
@@ -162,9 +161,9 @@ namespace APS.Controllers
                 Title = article.Title,
                 Content = article.Content,
                 CategoryId = article.CategoryId, // Set selected category
-                Categories = categories,         // Populate categories
+                Categories = categories ?? new List<Category>(),         // Populate categories
                 CurrentCoverImageUrl = article.CoverImageUrl,
-                CurrentImages = article.Images.Select(i => new ArticleImageViewModel
+                CurrentImages = (article.Images ?? new List<ArticleImage>()).Select(i => new ArticleImageViewModel
                 {
                     Id = i.Id,
                     ImageUrl = i.ImageUrl,
@@ -182,6 +181,19 @@ namespace APS.Controllers
         {
             if (!ModelState.IsValid)
             {
+                model.Categories = await _context.Categories.ToListAsync();
+                var dbArticle = await _context.Articles
+                    .Include(a => a.Images)
+                    .FirstOrDefaultAsync(a => a.Id == model.Id);
+                model.CurrentImages = dbArticle?.Images?.Select(i => new ArticleImageViewModel
+                {
+                    Id = i.Id,
+                    ImageUrl = i.ImageUrl,
+                    Caption = i.Caption,
+                    DisplayOrder = i.DisplayOrder
+                }).ToList() ?? new List<ArticleImageViewModel>();
+                model.CurrentCoverImageUrl = dbArticle?.CoverImageUrl;
+                TempData["EditError"] = string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
                 return View(model);
             }
 
@@ -191,7 +203,8 @@ namespace APS.Controllers
 
             if (article == null)
             {
-                return NotFound();
+                TempData["EditError"] = "Article not found.";
+                return RedirectToAction(nameof(Index));
             }
 
             if (!User.IsInRole("Admin") && article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
@@ -201,6 +214,7 @@ namespace APS.Controllers
 
             article.Title = model.Title;
             article.Content = model.Content;
+            article.CategoryId = model.CategoryId;
             article.UpdatedAt = DateTime.UtcNow;
 
             if (model.NewCoverImage != null)
@@ -213,15 +227,15 @@ namespace APS.Controllers
             }
 
             // Handle new images
-            for (int i = 0; i < model.NewImages.Count; i++)
+            for (int i = 0; i < (model.NewImages?.Count ?? 0); i++)
             {
-                if (model.NewImages[i] != null)
+                if (model.NewImages?[i] != null)
                 {
                     var image = new ArticleImage
                     {
                         ArticleId = article.Id,
                         ImageUrl = await SaveImage(model.NewImages[i]),
-                        Caption = model.NewImageCaptions[i],
+                        Caption = model.NewImageCaptions != null && model.NewImageCaptions.Count > i ? model.NewImageCaptions[i] : string.Empty,
                         DisplayOrder = article.Images.Count + i
                     };
                     article.Images.Add(image);
@@ -268,7 +282,7 @@ namespace APS.Controllers
                 DeleteImage(article.CoverImageUrl);
             }
 
-            foreach (var image in article.Images)
+            foreach (var image in article.Images ?? new List<ArticleImage>())
             {
                 DeleteImage(image.ImageUrl);
             }
@@ -305,8 +319,8 @@ namespace APS.Controllers
             var comment = new ArticleComment
             {
                 ArticleId = model.ArticleId,
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-                Content = model.Content,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty,
+                Content = model.Content ?? string.Empty,
                 IsApproved = User.IsInRole("Admin") || User.IsInRole("Moderator")
             };
 
@@ -390,8 +404,7 @@ namespace APS.Controllers
                 }).ToList() ?? new List<ArticleImageViewModel>(),
                 Comments = new List<ArticleCommentViewModel>(),
                 IsAdmin = User.IsInRole("Admin"),
-                CategoryId = article.CategoryId,
-                CategoryName = article.Category?.Name ?? ""
+                CategoryId = article.CategoryId
             };
 
             return View(viewModel);

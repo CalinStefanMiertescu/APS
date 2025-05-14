@@ -3,12 +3,18 @@
     ViewData["Title"] = "Edit Article";
 }
 
+@if (TempData["EditError"] != null)
+{
+    <div class="alert alert-danger">@TempData["EditError"]</div>
+}
+
 <div class="edit-article-container">
     <div class="edit-article-header">
         <h1 class="edit-article-title">Edit Article</h1>
     </div>
 
     <form asp-action="Edit" method="post" enctype="multipart/form-data" class="edit-article-form">
+        @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
 

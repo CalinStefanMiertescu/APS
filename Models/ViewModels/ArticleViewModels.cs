@@ -23,7 +23,6 @@ namespace APS.Models.ViewModels
         public bool IsPublished { get; set; }
         public string AuthorId { get; set; }
         public string AuthorName { get; set; }
-        public string CategoryName { get; set; }
         public List<ArticleImageViewModel> Images { get; set; } = new List<ArticleImageViewModel>();
         public List<ArticleCommentViewModel> Comments { get; set; } = new List<ArticleCommentViewModel>();
         public bool IsAdmin { get; set; }
@@ -83,7 +82,7 @@ namespace APS.Models.ViewModels
 
         public List<Category> Categories { get; set; } = new();
 
-        public string CurrentCoverImageUrl { get; set; }
+        public string? CurrentCoverImageUrl { get; set; }
         public IFormFile NewCoverImage { get; set; }
         public List<ArticleImageViewModel> CurrentImages { get; set; } = new List<ArticleImageViewModel>();
         public List<IFormFile> NewImages { get; set; } = new List<IFormFile>();
