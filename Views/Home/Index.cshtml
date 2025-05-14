@@ -89,15 +89,19 @@
                             <div class="col-12 text-center text-muted">Nu există anunțuri încă.</div>
                         }
                     </div>
-                    <hr />
                     <div class="row g-3">
-                        <h5 class="card-title mb-3">Articole recente</h5>
                         @if (Model.LatestArticles != null && Model.LatestArticles.Any())
                         {
                             @foreach (var article in Model.LatestArticles)
                             {
                                 <div class="col-md-4">
                                     <div class="announcement-card bg-dark text-light p-3 rounded h-100">
+                                        @if (!string.IsNullOrEmpty(article.CoverImageUrl))
+                                        {
+                                            <div style="width:100%;">
+                                                <img src="@article.CoverImageUrl" alt="@article.Title" style="width:100%; height:180px; object-fit:cover; border-radius:0.5rem 0.5rem 0 0; margin-bottom:1rem; display:block;" />
+                                            </div>
+                                        }
                                         <h6 class="fw-bold">@article.Title</h6>
                                         <p class="mb-1">@((article.Content.Length > 100 ? article.Content.Substring(0, 100) + "..." : article.Content))</p>
                                         <small class="text-muted">@article.PublishedAt?.ToString("dd MMMM yyyy")</small>

@@ -533,4 +533,14 @@
     #memberPageModal .col-md-4 {
         margin-bottom: 2rem;
     }
+}
+
+/* Opaque modal for biography edit */
+#editBioModal .modal-content {
+    background: #1a223f !important;
+    color: #e0e6ed;
+    border-radius: 1.5rem;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    backdrop-filter: none !important;
 } 

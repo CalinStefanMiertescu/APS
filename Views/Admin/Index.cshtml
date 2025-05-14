@@ -430,17 +430,31 @@
         }
         function approveChanges(userId) {
             if (confirm('Are you sure you want to approve these changes?')) {
-                $.post('/Admin/ApproveChanges', { userId: userId })
-                    .done(function() { location.reload(); })
-                    .fail(function(xhr) {
-                        alert('Failed to approve changes: ' + (xhr.responseJSON?.message || xhr.statusText));
-                    });
+                $.ajax({
+                    url: '/Admin/ApproveChanges',
+                    method: 'POST',
+                    data: { userId: userId },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .done(function() { location.reload(); })
+                .fail(function(xhr) {
+                    alert('Failed to approve changes: ' + (xhr.responseJSON?.message || xhr.statusText));
+                });
             }
         }
         function rejectChanges(userId) {
             const reason = prompt('Please enter rejection reason:');
             if (reason) {
-                $.post('/Admin/RejectChanges', { userId: userId, reason: reason }, function() { location.reload(); });
+                $.ajax({
+                    url: '/Admin/RejectChanges',
+                    method: 'POST',
+                    data: { userId: userId, reason: reason },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .done(function() { location.reload(); })
+                .fail(function(xhr) {
+                    alert('Failed to reject changes: ' + (xhr.responseJSON?.message || xhr.statusText));
+                });
             }
         }
         function addType(type) {

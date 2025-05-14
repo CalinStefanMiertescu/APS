@@ -139,6 +139,8 @@ namespace APS.Controllers
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    return Json(new { success = false, message = "User not found." });
                 return NotFound();
             }
 
@@ -146,6 +148,8 @@ namespace APS.Controllers
             user.PendingChangesJson = null;
             await _context.SaveChangesAsync();
 
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return Json(new { success = true });
             return RedirectToAction(nameof(Index));
         }
 

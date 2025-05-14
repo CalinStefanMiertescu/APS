@@ -387,4 +387,12 @@ body, .modern-articles-container, .modern-admin-container, .modern-create-articl
     .modern-create-article-form {
         padding: 1.2rem 0.5rem;
     }
+}
+
+.modal-content, .modern-modal-content {
+    background: var(--modern-card-bg) !important;
+    box-shadow: var(--modern-shadow);
+    border-radius: 1.5rem;
+    border: none;
+    backdrop-filter: none !important;
 } 

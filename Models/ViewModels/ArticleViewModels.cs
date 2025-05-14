@@ -25,6 +25,7 @@ namespace APS.Models.ViewModels
         public string AuthorName { get; set; }
         public List<ArticleImageViewModel> Images { get; set; } = new List<ArticleImageViewModel>();
         public List<ArticleCommentViewModel> Comments { get; set; } = new List<ArticleCommentViewModel>();
+        public bool IsAdmin { get; set; }
     }
 
     public class ArticleImageViewModel

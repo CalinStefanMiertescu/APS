@@ -374,7 +374,8 @@ namespace APS.Controllers
                     Caption = i.Caption,
                     DisplayOrder = i.DisplayOrder
                 }).ToList() ?? new List<ArticleImageViewModel>(),
-                Comments = new List<ArticleCommentViewModel>()
+                Comments = new List<ArticleCommentViewModel>(),
+                IsAdmin = User.IsInRole("Admin")
             };
             return View(viewModel);
         }

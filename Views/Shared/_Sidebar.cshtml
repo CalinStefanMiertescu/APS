@@ -123,7 +123,6 @@
             @if (Model?.IsPayingMember != true)
             {
                 <div id="paypal-button-container" class="mt-3"></div>
-                <button id="stripe-button" class="btn btn-primary mt-2 w-100">Pay with Stripe</button>
             }
         </div>
     </div>
@@ -215,7 +214,6 @@
 
 @section Scripts {
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
-    <script src="https://js.stripe.com/v3/"></script>
     <script>
         paypal.Buttons({
             createOrder: function(data, actions) {
@@ -250,22 +248,6 @@
                 });
             }
         }).render('#paypal-button-container');
-
-        document.getElementById('stripe-button')?.addEventListener('click', function() {
-            fetch('/Member/CreateStripeSession', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.sessionId) {
-                    var stripe = Stripe(data.publicKey);
-                    stripe.redirectToCheckout({ sessionId: data.sessionId });
-                } else {
-                    alert('Stripe session creation failed.');
-                }
-            });
-        });
     </script>
 }
 
