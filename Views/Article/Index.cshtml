@@ -34,6 +34,7 @@
                     <div style="font-size: 0.98rem; color: #b0b8c1; margin-bottom: 0.7rem; display: flex; gap: 1.2rem; align-items: center;">
                         <span><i class="fas fa-user"></i> @article.AuthorName</span>
                         <span><i class="fas fa-calendar"></i> @article.PublishedAt.ToString("MMMM dd, yyyy")</span>
+                        <span class="category"><i class="fas fa-tag"></i> @article.CategoryName</span>
                     </div>
                     <div style="color: #e0e6ed; font-size: 1.08rem; margin-bottom: 1.2rem;">
                         @Html.Raw(article.Content.Length > 300 ? article.Content.Substring(0, 300) + "..." : article.Content)
@@ -42,7 +43,7 @@
                         <a href="@Url.Action("Details", new { id = article.Id })" class="modern-btn modern-btn-primary">
                             Read More
                         </a>
-                        @if (Model.IsAdmin || (Model.IsModerator && article.AuthorId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+                        @if (Model.IsAdmin)
                         {
                             <a href="@Url.Action("Edit", new { id = article.Id })" class="modern-btn modern-btn-secondary">
                                 <i class="fas fa-edit"></i> Edit

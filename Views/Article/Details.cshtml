@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = Model.Title;
 }
-
 <div style="width: 100%; max-width: 1200px; margin: 2.5rem auto;">
     <div style="border-radius: 2rem 2rem 0 0; overflow: hidden; box-shadow: 0 8px 32px #000a;">
         <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #222;">
@@ -32,6 +31,7 @@
         <div style="display:flex; gap:2rem; align-items:center; margin-bottom:2rem;">
             <span style="color:#b0b8c1;"><i class="fas fa-user"></i> @Model.AuthorName</span>
             <span style="color:#b0b8c1;"><i class="fas fa-calendar"></i> @Model.PublishedAt.ToString("dd MMMM yyyy")</span>
+            <span>style="color:#b0b8c1;"><i class="fas fa-tag"></i> @Model.CategoryName</span>
         </div>
         <div style="color:#e0e6ed; font-size:1.18rem; line-height:1.7; margin-bottom:2.5rem;">
             @Html.Raw(Model.Content)
