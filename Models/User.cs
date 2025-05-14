@@ -52,6 +52,7 @@ namespace APS.Models
         public bool IsPayingMember { get; set; } = false;
         public DateTime? MembershipExpiresAt { get; set; }
         public DateTime? LastMembershipPayment { get; set; }
+        public bool AutoRenew { get; set; } = false;
         public bool HasPendingChanges { get; set; } = false;
         public string? PendingChangesJson { get; set; }
         public bool IsRejected { get; set; } = false;

@@ -272,8 +272,9 @@ namespace APS.Controllers
 
                 // Update user's membership status
                 user.IsPayingMember = true;
-                user.MembershipExpiresAt = DateTime.UtcNow.AddYears(1);
+                user.MembershipExpiresAt = user.MembershipExpiresAt?.AddYears(payment.Duration) ?? DateTime.UtcNow.AddYears(payment.Duration);
                 user.LastMembershipPayment = DateTime.UtcNow;
+                user.AutoRenew = payment.AutoRenew;
 
                 // Create a payment record
                 var paymentRecord = new Payment
@@ -375,5 +376,7 @@ namespace APS.Controllers
         public string OrderId { get; set; }
         public string PaymentId { get; set; }
         public string Status { get; set; }
+        public int Duration { get; set; }
+        public bool AutoRenew { get; set; }
     }
 } 

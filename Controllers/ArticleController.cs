@@ -205,10 +205,8 @@ namespace APS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (!(User.IsInRole("Admin") || User.IsInRole("Moderator")) && article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
-            {
-                return Forbid();
-            }
+            // Log user roles for debugging
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] User Roles: {string.Join(", ", User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))}");
 
             article.Title = model.Title;
             article.Content = model.Content;

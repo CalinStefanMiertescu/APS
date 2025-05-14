@@ -68,6 +68,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     SeedAdminUserAsync(services).GetAwaiter().GetResult();
+    SeedRolesAsync(services).GetAwaiter().GetResult();
 }
 
 app.Run();
@@ -99,5 +100,16 @@ async Task SeedAdminUserAsync(IServiceProvider services)
             DateOfBirth = new DateTime(1990, 1, 1) // Adding default date of birth
         };
         await userManager.CreateAsync(adminUser, adminPassword);
+    }
+}
+
+async Task SeedRolesAsync(IServiceProvider services)
+{
+    var roleManager = services.GetRequiredService<RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
+    string[] roles = { "Admin", "Moderator" };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new Microsoft.AspNetCore.Identity.IdentityRole(role));
     }
 }

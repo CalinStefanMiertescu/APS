@@ -7,7 +7,7 @@
 <div class="modern-articles-container">
     <div class="modern-articles-header">
         <h1 class="modern-articles-title">Anunțuri</h1>
-        @if (Model.IsAdmin)
+        @if (Model.IsAdmin || Model.IsModerator)
         {
             <a href="@Url.Action("Create")" class="modern-btn modern-btn-primary">
                 <i class="fas fa-plus"></i> Creează un anunț

@@ -3,6 +3,7 @@ using APS.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace APS.Policys
 {
@@ -31,7 +32,7 @@ namespace APS.Policys
             }
 
             // Debug logging for troubleshooting
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] UserId: {userId}, IsAdmin: {user?.IsAdmin}, IsModerator: {user?.IsModerator}");
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] UserId: {userId}, IsAdmin: {user?.IsAdmin}, IsModerator: {user?.IsModerator}, Roles: {string.Join(", ", context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value))}");
         }
     }
 } 

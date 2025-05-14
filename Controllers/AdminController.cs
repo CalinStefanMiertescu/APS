@@ -8,13 +8,19 @@ using APS.Models;
 using APS.Models.ViewModels;
 using APS.Data;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 
 namespace APS.Controllers
 {
     [Authorize(Policy = "RequireAdmin")]
     public class AdminController : BaseController
     {
-        public AdminController(APSContext context) : base(context) { }
+        private readonly UserManager<User> _userManager;
+
+        public AdminController(APSContext context, UserManager<User> userManager) : base(context)
+        {
+            _userManager = userManager;
+        }
 
         public async Task<IActionResult> Index(string filterType = null, string filterPublication = null, string filterLocation = null)
         {
@@ -350,27 +356,28 @@ namespace APS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Store original type if not already stored
-            if (string.IsNullOrEmpty(user.OriginalJournalistType))
+            // Remove from all roles first
+            var roles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, roles);
+
+            if (role == "Admin")
             {
-                user.OriginalJournalistType = user.JournalistType;
+                user.IsAdmin = true;
+                user.IsModerator = false;
+                await _userManager.AddToRoleAsync(user, "Admin");
             }
-
-            user.IsAdmin = role == "Admin";
-            user.IsModerator = role == "Moderator";
-
-            if (role == "User")
+            else if (role == "Moderator")
             {
                 user.IsAdmin = false;
-                user.IsModerator = false;
-                // Restore original type
-                user.JournalistType = user.OriginalJournalistType ?? user.JournalistType;
+                user.IsModerator = true;
+                await _userManager.AddToRoleAsync(user, "Moderator");
             }
             else
             {
-                // Set type to match role
-                user.JournalistType = role;
+                user.IsAdmin = false;
+                user.IsModerator = false;
             }
+
             await _context.SaveChangesAsync();
             TempData["AdminMessage"] = $"Role updated to {role} for {user.FirstName} {user.LastName}.";
             return RedirectToAction(nameof(Index));
