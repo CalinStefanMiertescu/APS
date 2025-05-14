@@ -1,30 +1,30 @@
-@model APS.Models.ViewModels.CreateArticleViewModel
+﻿@model APS.Models.ViewModels.CreateArticleViewModel
 @{
     ViewData["Title"] = "Create Article";
 }
 
 <div class="modern-create-article-container">
     <div class="modern-create-article-header">
-        <h1 class="modern-create-article-title">Create New Article</h1>
+        <h1 class="modern-create-article-title">Creează un anunț</h1>
     </div>
 
     <form asp-action="Create" method="post" enctype="multipart/form-data" class="modern-create-article-form glass-card">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="modern-form-group">
-            <label asp-for="Title" class="modern-form-label">Title</label>
+            <label asp-for="Title" class="modern-form-label">Titlu</label>
             <input asp-for="Title" class="modern-form-control" />
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
         <div class="modern-form-group">
-            <label asp-for="Content" class="modern-form-label">Content</label>
+            <label asp-for="Content" class="modern-form-label">Conținut</label>
             <textarea asp-for="Content" class="modern-form-control" rows="10"></textarea>
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="CategoryId" class="form-label">Category</label>
+            <label asp-for="CategoryId" class="form-label">Categorie</label>
             <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
                 <option value="">-- Select Category --</option>
             </select>
@@ -32,13 +32,13 @@
         </div>
 
         <div class="modern-form-group">
-            <label asp-for="CoverImage" class="modern-form-label">Cover Image</label>
+            <label asp-for="CoverImage" class="modern-form-label">Thumbnail</label>
             <input asp-for="CoverImage" type="file" class="modern-form-control" accept="image/*" />
             <span asp-validation-for="CoverImage" class="text-danger"></span>
         </div>
 
         <div class="modern-form-group">
-            <label class="modern-form-label">Additional Images</label>
+            <label class="modern-form-label">Poze adiționale</label>
             <div id="additionalImages">
                 <div class="modern-image-input-group">
                     <input type="file" name="AdditionalImages" class="modern-form-control" accept="image/*" />
@@ -49,16 +49,16 @@
                 </div>
             </div>
             <button type="button" class="modern-btn modern-btn-secondary" id="addImage">
-                <i class="fas fa-plus"></i> Add Image
+                <i class="fas fa-plus"></i> Adaugă Poză
             </button>
         </div>
 
         <div class="modern-form-actions">
             <button type="submit" class="modern-btn modern-btn-primary">
-                <i class="fas fa-save"></i> Save Article
+                <i class="fas fa-save"></i> Salvează Anunțul
             </button>
             <a href="@Url.Action("Index")" class="modern-btn modern-btn-secondary">
-                <i class="fas fa-times"></i> Cancel
+                <i class="fas fa-times"></i> Anulează
             </a>
         </div>
     </form>

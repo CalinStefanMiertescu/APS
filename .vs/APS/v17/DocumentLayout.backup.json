@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "E:\\APS\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C5B97F25-C75A-4188-BB12-B006948AC3F2}|APS.csproj|e:\\aps\\controllers\\articlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5B97F25-C75A-4188-BB12-B006948AC3F2}|APS.csproj|solutionrelative:controllers\\articlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C5B97F25-C75A-4188-BB12-B006948AC3F2}|APS.csproj|e:\\aps\\models\\viewmodels\\articleviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C5B97F25-C75A-4188-BB12-B006948AC3F2}|APS.csproj|solutionrelative:models\\viewmodels\\articleviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C5B97F25-C75A-4188-BB12-B006948AC3F2}|APS.csproj|e:\\aps\\views\\shared\\_sidebar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{C5B97F25-C75A-4188-BB12-B006948AC3F2}|APS.csproj|solutionrelative:views\\shared\\_sidebar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
@@ -35,40 +27,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ArticleController.cs",
-              "DocumentMoniker": "E:\\APS\\Controllers\\ArticleController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ArticleController.cs",
-              "ToolTip": "E:\\APS\\Controllers\\ArticleController.cs",
-              "RelativeToolTip": "Controllers\\ArticleController.cs",
-              "ViewState": "AgIAAJQBAAAAAAAAAAAAAJYBAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-14T14:59:51.31Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ArticleViewModels.cs",
-              "DocumentMoniker": "E:\\APS\\Models\\ViewModels\\ArticleViewModels.cs",
-              "RelativeDocumentMoniker": "Models\\ViewModels\\ArticleViewModels.cs",
-              "ToolTip": "E:\\APS\\Models\\ViewModels\\ArticleViewModels.cs",
-              "RelativeToolTip": "Models\\ViewModels\\ArticleViewModels.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAxwBQAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-14T14:58:32.176Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "_Sidebar.cshtml",
               "DocumentMoniker": "E:\\APS\\Views\\Shared\\_Sidebar.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Sidebar.cshtml",
               "ToolTip": "E:\\APS\\Views\\Shared\\_Sidebar.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Sidebar.cshtml",
-              "ViewState": "AgIAACUAAAAAAAAAAAAAADEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAO0AAAAAAAAAAAAAAN0AAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-10T09:59:44.984Z",
+              "WhenOpened": "2025-05-14T16:12:41.99Z",
               "EditorCaption": ""
             }
           ]

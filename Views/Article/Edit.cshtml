@@ -1,4 +1,4 @@
-@model APS.Models.ViewModels.EditArticleViewModel
+﻿@model APS.Models.ViewModels.EditArticleViewModel
 @{
     ViewData["Title"] = "Edit Article";
 }
@@ -19,19 +19,19 @@
         <input type="hidden" asp-for="Id" />
 
         <div class="form-group">
-            <label asp-for="Title" class="form-label">Title</label>
+            <label asp-for="Title" class="form-label">Titlu</label>
             <input asp-for="Title" class="form-control" />
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Content" class="form-label">Content</label>
+            <label asp-for="Content" class="form-label">Conținut</label>
             <textarea asp-for="Content" class="form-control" rows="10"></textarea>
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="CategoryId" class="form-label">Category</label>
+            <label asp-for="CategoryId" class="form-label">Categorie</label>
             <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
                 <option value="">-- Select Category --</option>
             </select>
@@ -46,13 +46,13 @@
                     <img src="@Model.CurrentCoverImageUrl" alt="Current cover image" />
                 </div>
             }
-            <label asp-for="NewCoverImage" class="form-label">New Cover Image</label>
+            <label asp-for="NewCoverImage" class="form-label">Thumbnail</label>
             <input asp-for="NewCoverImage" type="file" class="form-control" accept="image/*" />
             <span asp-validation-for="NewCoverImage" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label class="form-label">Current Images</label>
+            <label class="form-label">Poze curente</label>
             <div class="current-images">
                 @foreach (var image in Model.CurrentImages)
                 {
@@ -65,7 +65,7 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label">Add New Images</label>
+            <label class="form-label">Adaugă mai multe poze</label>
             <div id="additionalImages">
                 <div class="image-input-group">
                     <input type="file" name="NewImages" class="form-control" accept="image/*" />

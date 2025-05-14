@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -203,7 +203,7 @@ namespace APS.Controllers
 
             if (article == null)
             {
-                TempData["EditError"] = "Article not found.";
+                TempData["EditError"] = "Anunțul nu a fost găsit.";
                 return RedirectToAction(nameof(Index));
             }
 

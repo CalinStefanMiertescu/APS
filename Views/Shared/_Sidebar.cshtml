@@ -1,4 +1,4 @@
-@model APS.Models.ViewModels.MemberDashboardViewModel
+﻿@model APS.Models.ViewModels.MemberDashboardViewModel
 @{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
@@ -27,13 +27,13 @@
                         {
                             <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
                                 <span class="material-icons">home</span>
-                                <span>Home</span>
+                                <span>Acasă</span>
                             </a>
                         }@if (Model?.IsAdmin == true)
                         {
                             <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
                                 <span class="material-icons">admin_panel_settings</span>
-                                <span>Admin Dashboard</span>
+                                <span>Panoul Adminului</span>
                             </a>
                         }
                     }
@@ -44,19 +44,19 @@
                         {
                             <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
                                 <span class="material-icons">home</span>
-                                <span>Home</span>
+                                <span>Acasă</span>
                             </a>
                         }
 
                         <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
                             <span class="material-icons">article</span>
-                            <span>News</span>
+                            <span>Anunțuri</span>
                         </a>
                         @if (Model?.IsAdmin == true)
                         {
                             <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
                                 <span class="material-icons">admin_panel_settings</span>
-                                <span>Admin Dashboard</span>
+                                <span>Panoul Adminului</span>
                             </a>
                         }
                     }
@@ -67,18 +67,18 @@
                         {
                             <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
                                 <span class="material-icons">home</span>
-                                <span>Home</span>
+                                <span>Acasă</span>
                             </a>
                         }
                         <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
                             <span class="material-icons">article</span>
-                            <span>News</span>
+                            <span>Anunțuri</span>
                         </a>
                         @if (Model?.IsAdmin == true)
                         {
                             <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn @(currentController == "Article" && currentAction == "Create" ? "active" : "")">
                                 <span class="material-icons">add_circle</span>
-                                <span>Create News</span>
+                                <span>Creează Anunț</span>
                             </a>
                         }
                     }
@@ -89,22 +89,22 @@
                         {
                             <a href="@Url.Action("Index", "Home")" class="modern-sidebar-btn">
                                 <span class="material-icons">home</span>
-                                <span>Home</span>
+                                <span>Acasă</span>
                             </a>
                         }
                         <a href="@Url.Action("Index", "Article")" class="modern-sidebar-btn">
                             <span class="material-icons">article</span>
-                            <span>News</span>
+                            <span>Anunțuri</span>
                         </a>
                         @if (Model?.IsAdmin == true)
                         {
                             <a href="@Url.Action("Create", "Article")" class="modern-sidebar-btn">
                                 <span class="material-icons">add_circle</span>
-                                <span>Create News</span>
+                                <span>Creează Anunț</span>
                             </a>
                             <a href="@Url.Action("Index", "Admin")" class="modern-sidebar-btn @(currentController == "Admin" ? "active" : "")">
                                 <span class="material-icons">admin_panel_settings</span>
-                                <span>Admin Dashboard</span>
+                                <span>Panoul Adminului</span>
                             </a>
                         }
                     }
@@ -160,11 +160,11 @@
                     <div class="col-md-8">
                         <div class="card bg-secondary mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">Membership Status</h5>
+                                <h5 class="card-title">Status Abonament</h5>
                                 @if (Model?.IsPayingMember == true)
                                 {
                                     <div class="alert alert-success">
-                                        <i class="fas fa-check-circle"></i> Active Member
+                                        <i class="fas fa-check-circle"></i> Membru Activ
                                         <br>
                                         <small>Expires: @(Model?.MembershipExpiresAt?.ToString("dd/MM/yyyy") ?? "")</small>
                                     </div>
@@ -172,8 +172,8 @@
                                 else
                                 {
                                     <div class="alert alert-warning">
-                                        <i class="fas fa-exclamation-circle"></i> Not a Member
-                                        <p class="mb-0">Become a member to access exclusive content and features!</p>
+                                        <i class="fas fa-exclamation-circle"></i> Nu este membru
+                                        <p class="mb-0">Devino membru pentru a avea acces la conținut exclusiv!</p>
                                     </div>
                                 }
                             </div>
@@ -184,26 +184,26 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <p><strong>Email:</strong> @(Model?.Email ?? "")</p>
-                                        <p><strong>Phone:</strong> @(Model?.Phone ?? "")</p>
+                                        <p><strong>Telefon:</strong> @(Model?.Phone ?? "")</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><strong>City:</strong> @(Model?.City ?? "")</p>
-                                        <p><strong>Publication:</strong> @(Model?.Publication ?? "")</p>
+                                        <p><strong>Oraș:</strong> @(Model?.City ?? "")</p>
+                                        <p><strong>Publicație:</strong> @(Model?.Publication ?? "")</p>
                                     </div>
                                 </div>
                                 <div class="mt-3">
-                                    <h6>Biography</h6>
+                                    <h6>Descriere</h6>
                                     <p>@(Model?.Biography ?? "")</p>
                                 </div>
                             </div>
                         </div>
                         <form asp-action="UploadProfilePicture" asp-controller="Member" method="post" enctype="multipart/form-data" class="mb-2">
                             <input type="file" name="profilePicture" accept="image/*" class="form-control form-control-sm mb-2" />
-                            <button type="submit" class="btn btn-info btn-sm w-100">Upload New Picture</button>
+                            <button type="submit" class="btn btn-info btn-sm w-100">Încarcă-ți Poza de Profil</button>
                         </form>
                         <form asp-action="UpdateBiography" asp-controller="Member" method="post" class="mb-2">
-                            <textarea name="biography" class="form-control form-control-sm mb-2" rows="2" maxlength="500" placeholder="Add your biography here...">@Model.Biography</textarea>
-                            <button type="submit" class="btn btn-info btn-sm w-100">Update Biography</button>
+                            <textarea name="biography" class="form-control form-control-sm mb-2" rows="2" maxlength="500" placeholder="Adaugă-ți descrierea aici...">@Model.Biography</textarea>
+                            <button type="submit" class="btn btn-info btn-sm w-100">Actualizează-ți descrierea</button>
                         </form>
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                         amount: {
                             value: '50.00' // Membership price in EUR
                         },
-                        description: 'APS Annual Membership'
+                        description: 'Abonament Anual APS'
                     }]
                 });
             },
