@@ -7,7 +7,7 @@
 <div class="modern-articles-container">
     <div class="modern-articles-header">
         <h1 class="modern-articles-title">Anunțuri</h1>
-        @if (Model.IsAdmin || Model.IsModerator)
+        @if (Model.IsAdmin)
         {
             <a href="@Url.Action("Create")" class="modern-btn modern-btn-primary">
                 <i class="fas fa-plus"></i> Creează un anunț
@@ -43,13 +43,13 @@
                         <a href="@Url.Action("Details", new { id = article.Id })" class="modern-btn modern-btn-primary">
                             Citește mai mult
                         </a>
-                        @if (Model.IsAdmin)
+                        @if (Model.IsAdmin || Model.IsModerator)
                         {
                             <a href="@Url.Action("Edit", new { id = article.Id })" class="modern-btn modern-btn-secondary">
                                 <i class="fas fa-edit"></i> Editează
                             </a>
                         }
-                        @if (Model.IsAdmin)
+                        @if (Model.IsAdmin || Model.IsModerator)
                         {
                             if (!article.IsPublished)
                             {

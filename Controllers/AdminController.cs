@@ -339,5 +339,41 @@ namespace APS.Controllers
             }
             return Json(category);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SetUserRole(string userId, string role)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                TempData["AdminMessage"] = "User not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Store original type if not already stored
+            if (string.IsNullOrEmpty(user.OriginalJournalistType))
+            {
+                user.OriginalJournalistType = user.JournalistType;
+            }
+
+            user.IsAdmin = role == "Admin";
+            user.IsModerator = role == "Moderator";
+
+            if (role == "User")
+            {
+                user.IsAdmin = false;
+                user.IsModerator = false;
+                // Restore original type
+                user.JournalistType = user.OriginalJournalistType ?? user.JournalistType;
+            }
+            else
+            {
+                // Set type to match role
+                user.JournalistType = role;
+            }
+            await _context.SaveChangesAsync();
+            TempData["AdminMessage"] = $"Role updated to {role} for {user.FirstName} {user.LastName}.";
+            return RedirectToAction(nameof(Index));
+        }
     }
 } 

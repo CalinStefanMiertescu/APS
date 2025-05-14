@@ -40,10 +40,6 @@ namespace APS.Models.ViewModels
         public string JournalistType { get; set; }
 
         [Required]
-        [Display(Name = "Publication")]
-        public string Publication { get; set; }
-
-        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
@@ -54,7 +50,10 @@ namespace APS.Models.ViewModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
+        [Required]
+        [Display(Name = "Publication")]
+        public string Publication { get; set; }
+
         public List<string> Cities { get; set; } = new List<string>();
-        public List<string> Publications { get; set; } = new List<string>();
     }
 } 

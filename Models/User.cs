@@ -35,6 +35,9 @@ namespace APS.Models
         [StringLength(50)]
         public string JournalistType { get; set; } = null!;
 
+        // Stores the original type for role switching
+        public string? OriginalJournalistType { get; set; }
+
         [Required]
         [StringLength(100)]
         public string Publication { get; set; } = null!;

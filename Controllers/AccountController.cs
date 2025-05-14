@@ -69,8 +69,7 @@ namespace APS.Controllers
         {
             var model = new RegisterViewModel
             {
-                Cities = RomanianCities,
-                Publications = FictionalPublishers
+                Cities = RomanianCities
             };
             return View(model);
         }
@@ -86,7 +85,6 @@ namespace APS.Controllers
                     ModelState.AddModelError("Email", "Email already in use.");
                     // Repopulate dropdowns before returning view
                     model.Cities = RomanianCities;
-                    model.Publications = FictionalPublishers;
                     return View(model);
                 }
 
@@ -120,7 +118,6 @@ namespace APS.Controllers
             }
             // Repopulate dropdowns before returning view
             model.Cities = RomanianCities;
-            model.Publications = FictionalPublishers;
             return View(model);
         }
 
@@ -140,6 +137,11 @@ namespace APS.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 } 

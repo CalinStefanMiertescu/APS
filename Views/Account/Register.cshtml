@@ -76,13 +76,7 @@
 
                 <div class="form-group">
                     <label asp-for="Publication" class="form-label"></label>
-                    <select asp-for="Publication" class="form-select">
-                        <option value="">Select publication</option>
-                        @foreach (var pub in Model.Publications)
-                        {
-                            <option value="@pub">@pub</option>
-                        }
-                    </select>
+                    <input asp-for="Publication" class="form-control" placeholder="Enter your publication" />
                     <span asp-validation-for="Publication" class="text-danger"></span>
                 </div>
 

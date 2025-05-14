@@ -73,7 +73,13 @@
                             <tr>
                                 <td>@user.FirstName @user.LastName</td>
                                 <td>@user.Email</td>
-                                <td>@user.JournalistType</td>
+                                <td>
+                                    @user.JournalistType
+                                    <br />
+                                    <span style="font-size: 0.85em; color: #aaa;">
+                                        @(user.IsAdmin ? "Admin" : user.IsModerator ? "Moderator" : "User")
+                                    </span>
+                                </td>
                                 <td>
                                     <button class="modern-btn modern-btn-success btn-sm" onclick="approveUser('@user.Id')">
                                         <i class="fas fa-check"></i> Approve
@@ -169,7 +175,7 @@
             <div class="table-responsive">
                 <table class="modern-table">
                     <thead>
-                        <tr><th>Nume</th><th>Email</th><th>Tip</th><th>Publicație</th><th>Oraș</th><th>Acțiuni</th></tr>
+                        <tr><th>Nume</th><th>Email</th><th>Tip</th><th>Publicație</th><th>Oraș</th><th>Rol</th><th>Acțiuni</th></tr>
                     </thead>
                     <tbody>
                         @foreach (var user in Model.ActiveMembers)
@@ -177,12 +183,49 @@
                             <tr>
                                 <td>@user.FirstName @user.LastName</td>
                                 <td>@user.Email</td>
-                                <td>@user.JournalistType</td>
+                                <td>
+                                    @user.JournalistType
+                                    <br />
+                                    <span style="font-size: 0.85em; color: #aaa;">
+                                        @(user.IsAdmin ? "Admin" : user.IsModerator ? "Moderator" : "User")
+                                    </span>
+                                </td>
                                 <td>@user.Publication</td>
                                 <td>@user.City</td>
                                 <td>
+                                    <form asp-action="SetUserRole" method="post" style="display:inline;">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
+                                            @if (user.IsAdmin == false && user.IsModerator == false)
+                                            {
+                                                <option value="User" selected>User</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="User">User</option>
+                                            }
+                                            @if (user.IsModerator)
+                                            {
+                                                <option value="Moderator" selected>Moderator</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="Moderator">Moderator</option>
+                                            }
+                                            @if (user.IsAdmin)
+                                            {
+                                                <option value="Admin" selected>Admin</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="Admin">Admin</option>
+                                            }
+                                        </select>
+                                    </form>
+                                </td>
+                                <td>
                                     <button class="modern-btn modern-btn-danger btn-sm" onclick="inactivateMember('@user.Id')">
-                                        <i class="fas fa-user-slash"></i> Inactivate
+                                        <i class="fas fa-user-slash"></i> Inactivează
                                     </button>
                                 </td>
                             </tr>
@@ -205,7 +248,13 @@
                             <tr>
                                 <td>@user.FirstName @user.LastName</td>
                                 <td>@user.Email</td>
-                                <td>@user.JournalistType</td>
+                                <td>
+                                    @user.JournalistType
+                                    <br />
+                                    <span style="font-size: 0.85em; color: #aaa;">
+                                        @(user.IsAdmin ? "Admin" : user.IsModerator ? "Moderator" : "User")
+                                    </span>
+                                </td>
                                 <td><input type="date" id="activeUntil_@user.Id" class="modern-form-control" /></td>
                                 <td>
                                     <button class="modern-btn modern-btn-success btn-sm" onclick="activateMember('@user.Id')">

@@ -32,11 +32,13 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdmin", policy => policy.Requirements.Add(new IsAdminRequirement()));
     options.AddPolicy("RequireModerator", policy => policy.Requirements.Add(new IsModeratorRequirement()));
+    options.AddPolicy("RequireAdminOrModerator", policy => policy.Requirements.Add(new IsAdminOrModeratorRequirement()));
 });
 
 // Register the authorization handler
 builder.Services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, IsModeratorRequirment.IsModeratorHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IsAdminOrModeratorHandler>();
 
 var app = builder.Build();
 

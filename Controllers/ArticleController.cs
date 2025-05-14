@@ -80,9 +80,7 @@ namespace APS.Controllers
             return View(viewModel);
         }
 
-
-
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> Create()
         {
             var categories = await _context.Categories.ToListAsync();
@@ -94,7 +92,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> Create(CreateArticleViewModel model)
         {
             if (!ModelState.IsValid)
@@ -142,7 +140,7 @@ namespace APS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> Edit(int id)
         {
             var article = await _context.Articles
@@ -176,7 +174,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> Edit(EditArticleViewModel model)
         {
             if (!ModelState.IsValid)
@@ -207,7 +205,7 @@ namespace APS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (!User.IsInRole("Admin") && article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            if (!(User.IsInRole("Admin") || User.IsInRole("Moderator")) && article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
                 return Forbid();
             }
@@ -248,7 +246,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> Publish(int id)
         {
             var article = await _context.Articles.FindAsync(id);
@@ -264,7 +262,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> Delete(int id)
         {
             var article = await _context.Articles
@@ -331,7 +329,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> ApproveComment(int id)
         {
             var article = await _context.Articles
@@ -351,7 +349,7 @@ namespace APS.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdminOrModerator")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var article = await _context.Articles
@@ -404,12 +402,12 @@ namespace APS.Controllers
                 }).ToList() ?? new List<ArticleImageViewModel>(),
                 Comments = new List<ArticleCommentViewModel>(),
                 IsAdmin = User.IsInRole("Admin"),
+                IsModerator = User.IsInRole("Moderator"),
                 CategoryId = article.CategoryId
             };
 
             return View(viewModel);
         }
-
 
         private async Task<string> SaveImage(IFormFile file)
         {

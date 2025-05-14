@@ -8,28 +8,24 @@
     <div class="alert alert-danger">@TempData["EditError"]</div>
 }
 
-<div class="edit-article-container">
-    <div class="edit-article-header">
-        <h1 class="edit-article-title">Edit Article</h1>
+<div class="modern-create-article-container">
+    <div class="modern-create-article-header">
+        <h1 class="modern-create-article-title">Edit Article</h1>
     </div>
-
-    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="edit-article-form">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="modern-create-article-form glass-card">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
-
-        <div class="form-group">
-            <label asp-for="Title" class="form-label">Titlu</label>
-            <input asp-for="Title" class="form-control" />
+        <div class="modern-form-group">
+            <label asp-for="Title" class="modern-form-label">Titlu</label>
+            <input asp-for="Title" class="modern-form-control" />
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
-
-        <div class="form-group">
-            <label asp-for="Content" class="form-label">Conținut</label>
-            <textarea asp-for="Content" class="form-control" rows="10"></textarea>
+        <div class="modern-form-group">
+            <label asp-for="Content" class="modern-form-label">Conținut</label>
+            <textarea asp-for="Content" class="modern-form-control" rows="10"></textarea>
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
-
         <div class="form-group">
             <label asp-for="CategoryId" class="form-label">Categorie</label>
             <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
@@ -37,22 +33,20 @@
             </select>
             <span asp-validation-for="CategoryId" class="text-danger"></span>
         </div>
-
-        <div class="form-group">
-            <label class="form-label">Current Cover Image</label>
+        <div class="modern-form-group">
+            <label class="modern-form-label">Current Cover Image</label>
             @if (!string.IsNullOrEmpty(Model.CurrentCoverImageUrl))
             {
                 <div class="current-cover-image">
                     <img src="@Model.CurrentCoverImageUrl" alt="Current cover image" />
                 </div>
             }
-            <label asp-for="NewCoverImage" class="form-label">Thumbnail</label>
-            <input asp-for="NewCoverImage" type="file" class="form-control" accept="image/*" />
+            <label asp-for="NewCoverImage" class="modern-form-label">Thumbnail</label>
+            <input asp-for="NewCoverImage" type="file" class="modern-form-control" accept="image/*" />
             <span asp-validation-for="NewCoverImage" class="text-danger"></span>
         </div>
-
-        <div class="form-group">
-            <label class="form-label">Poze curente</label>
+        <div class="modern-form-group">
+            <label class="modern-form-label">Poze curente</label>
             <div class="current-images">
                 @foreach (var image in Model.CurrentImages)
                 {
@@ -63,29 +57,27 @@
                 }
             </div>
         </div>
-
-        <div class="form-group">
-            <label class="form-label">Adaugă mai multe poze</label>
+        <div class="modern-form-group">
+            <label class="modern-form-label">Adaugă mai multe poze</label>
             <div id="additionalImages">
-                <div class="image-input-group">
-                    <input type="file" name="NewImages" class="form-control" accept="image/*" />
-                    <input type="text" name="NewImageCaptions" class="form-control" placeholder="Image caption" />
-                    <button type="button" class="btn btn-danger remove-image">
+                <div class="modern-image-input-group">
+                    <input type="file" name="NewImages" class="modern-form-control" accept="image/*" />
+                    <input type="text" name="NewImageCaptions" class="modern-form-control" placeholder="Image caption" />
+                    <button type="button" class="modern-btn modern-btn-danger remove-image">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
-            <button type="button" class="btn btn-secondary" id="addImage">
-                <i class="fas fa-plus"></i> Add Image
+            <button type="button" class="modern-btn modern-btn-secondary" id="addImage">
+                <i class="fas fa-plus"></i> Adaugă Poză
             </button>
         </div>
-
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Save Changes
+        <div class="modern-form-actions">
+            <button type="submit" class="modern-btn modern-btn-primary">
+                <i class="fas fa-save"></i> Salvează Anunțul
             </button>
-            <a href="@Url.Action("Index")" class="btn btn-secondary">
-                <i class="fas fa-times"></i> Cancel
+            <a href="@Url.Action("Index")" class="modern-btn modern-btn-secondary">
+                <i class="fas fa-times"></i> Anulează
             </a>
         </div>
     </form>
@@ -96,19 +88,18 @@
         $(document).ready(function() {
             $('#addImage').click(function() {
                 var imageGroup = `
-                    <div class="image-input-group">
-                        <input type="file" name="NewImages" class="form-control" accept="image/*" />
-                        <input type="text" name="NewImageCaptions" class="form-control" placeholder="Image caption" />
-                        <button type="button" class="btn btn-danger remove-image">
+                    <div class="modern-image-input-group">
+                        <input type="file" name="NewImages" class="modern-form-control" accept="image/*" />
+                        <input type="text" name="NewImageCaptions" class="modern-form-control" placeholder="Image caption" />
+                        <button type="button" class="modern-btn modern-btn-danger remove-image">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                 `;
                 $('#additionalImages').append(imageGroup);
             });
-
             $(document).on('click', '.remove-image', function() {
-                $(this).closest('.image-input-group').remove();
+                $(this).closest('.modern-image-input-group').remove();
             });
         });
     </script>
@@ -116,4 +107,27 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/articles.css" />
+    <link rel="stylesheet" href="~/css/modern.css" />
+    <style>
+        .modern-form-label[for="CategoryId"], label[for="CategoryId"] {
+            color: #00cfff;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        select.form-control[name="CategoryId"] {
+            background: #232b36;
+            color: #e0e6ed;
+            border: 1px solid #00cfff;
+            border-radius: 0.7rem;
+            padding: 0.7rem 1rem;
+            font-size: 1.08rem;
+            margin-bottom: 1.2rem;
+        }
+        select.form-control[name="CategoryId"]:focus {
+            border-color: #00cfff;
+            box-shadow: 0 0 0 2px #00cfff33;
+        }
+    </style>
 } 

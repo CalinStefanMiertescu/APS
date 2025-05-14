@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using APS.Data;
 using System.Linq;
@@ -25,8 +24,8 @@ namespace APS.Policys
                 return;
             }
 
-            var userEmail = context.User.Identity.Name;
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            var userId = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user != null && user.IsAdmin)
             {
