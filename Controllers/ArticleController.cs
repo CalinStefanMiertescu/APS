@@ -381,7 +381,7 @@ namespace APS.Controllers
                 Comments = new List<ArticleCommentViewModel>(),
                 IsAdmin = User.IsInRole("Admin"),
                 CategoryId = article.CategoryId,
-                CategoryName = article.Category?.Name
+                CategoryName = article.Category?.Name ?? ""
             };
             return View(viewModel);
         }

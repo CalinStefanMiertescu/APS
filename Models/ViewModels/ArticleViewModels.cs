@@ -28,6 +28,7 @@ namespace APS.Models.ViewModels
         public bool IsAdmin { get; set; }
         public int CategoryId { get; set; }
         public string? CategoryName { get; set; }
+        public string? Lead { get; set; }
     }
 
     public class ArticleImageViewModel

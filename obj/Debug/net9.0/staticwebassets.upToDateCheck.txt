@@ -75,10 +75,13 @@ wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\uploads\07ee66a5-2d05-40a2-98b5-0131d540f020_AW7I0014 (2).JPG
+wwwroot\uploads\2d235f44-7402-4cdf-a5ba-b81dd3c7212d_APS-Comunicat.jpg
 wwwroot\uploads\4240dbda-13d5-4d14-a0ef-565f0bf0390a_AW7I0023.JPG
 wwwroot\uploads\7688b3a7-b648-442f-a89c-7b362657e68d_AW7I0023 (2).JPG
 wwwroot\uploads\941f64cf-76ba-4bdd-9fad-daea03326ef9_AW7I0014 (2).JPG
 wwwroot\uploads\94a2a035-f919-46af-856a-658fa777a162_AW7I0014 (2).JPG
+wwwroot\uploads\9872cb59-3cbe-4817-a3f4-8895dc9443a3_APS-Comunicat.jpg
+wwwroot\uploads\b07bf658-3f33-4e31-ad0f-fd29e7aec4b7_APS-Comunicat.jpg
 wwwroot\uploads\e76c44fa-cdbb-41a1-9e7b-79081e53da9b_AW7I0020.JPG
 wwwroot\uploads\eb91ce13-0cfe-4de7-981d-0f2379d8db6a_AW7I0009.JPG
 wwwroot\uploads\f575032c-4226-446d-9412-fc39eb06daaa_AW7I0009.JPG
