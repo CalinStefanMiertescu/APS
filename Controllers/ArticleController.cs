@@ -29,6 +29,7 @@ namespace APS.Controllers
                 .Include(a => a.Author)
                 .Include(a => a.Images)
                 .Include(a => a.Comments)
+                .Include(a => a.Category)
                 .Where(a => a.IsPublished || (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator"))))
                 .OrderByDescending(a => a.PublishedAt)
                 .ToListAsync();
@@ -49,20 +50,22 @@ namespace APS.Controllers
                     Images = a.Images?.Select(i => new ArticleImageViewModel
                     {
                         Id = i.Id,
-                        ImageUrl = i.ImageUrl,
-                        Caption = i.Caption,
+                        ImageUrl = i.ImageUrl ?? string.Empty,
+                        Caption = i.Caption ?? string.Empty,
                         DisplayOrder = i.DisplayOrder
                     }).ToList() ?? new List<ArticleImageViewModel>(),
-                    Comments = a.Comments
+                    Comments = (a.Comments ?? new List<ArticleComment>())
                         .Where(c => c.IsApproved || (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator"))))
                         .Select(c => new ArticleCommentViewModel
                         {
                             Id = c.Id,
-                            Content = c.Content,
+                            Content = c.Content ?? string.Empty,
                             CreatedAt = c.CreatedAt,
                             UserName = c.User != null ? $"{c.User.FirstName} {c.User.LastName}" : "Unknown",
                             IsApproved = c.IsApproved
-                        }).ToList()
+                        }).ToList(),
+                    CategoryId = a.CategoryId,
+                    CategoryName = a.Category?.Name ?? ""
                 }).ToList(),
                 IsAdmin = User.IsInRole("Admin"),
                 IsModerator = User.IsInRole("Moderator")
@@ -351,6 +354,7 @@ namespace APS.Controllers
             var article = await _context.Articles
                 .Include(a => a.Author)
                 .Include(a => a.Images)
+                .Include(a => a.Category)
                 .FirstOrDefaultAsync(a => a.Id == id && a.IsPublished);
             if (article == null)
             {
@@ -375,7 +379,9 @@ namespace APS.Controllers
                     DisplayOrder = i.DisplayOrder
                 }).ToList() ?? new List<ArticleImageViewModel>(),
                 Comments = new List<ArticleCommentViewModel>(),
-                IsAdmin = User.IsInRole("Admin")
+                IsAdmin = User.IsInRole("Admin"),
+                CategoryId = article.CategoryId,
+                CategoryName = article.Category?.Name
             };
             return View(viewModel);
         }

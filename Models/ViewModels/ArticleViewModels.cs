@@ -17,7 +17,7 @@ namespace APS.Models.ViewModels
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public string CoverImageUrl { get; set; }
+        public string? CoverImageUrl { get; set; }
         public DateTime PublishedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsPublished { get; set; }
@@ -26,6 +26,8 @@ namespace APS.Models.ViewModels
         public List<ArticleImageViewModel> Images { get; set; } = new List<ArticleImageViewModel>();
         public List<ArticleCommentViewModel> Comments { get; set; } = new List<ArticleCommentViewModel>();
         public bool IsAdmin { get; set; }
+        public int CategoryId { get; set; }
+        public string? CategoryName { get; set; }
     }
 
     public class ArticleImageViewModel

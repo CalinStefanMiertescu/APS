@@ -57,7 +57,6 @@ namespace APS.Controllers
                 Categories = await _context.Categories
                     .Include(c => c.Articles)
                     .ToListAsync()
-
             };
 
             return View(viewModel);

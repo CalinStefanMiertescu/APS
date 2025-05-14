@@ -36,6 +36,7 @@ builder.Services.AddAuthorization(options =>
 
 // Register the authorization handler
 builder.Services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IsModeratorRequirment.IsModeratorHandler>();
 
 var app = builder.Build();
 

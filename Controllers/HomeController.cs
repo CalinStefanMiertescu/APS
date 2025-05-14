@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using APS.Models;
 using APS.Models.ViewModels;
 using APS.Data;
+using System.Collections.Generic;
 
 namespace APS.Controllers
 {
@@ -29,10 +30,30 @@ namespace APS.Controllers
             }
 
             var latestArticles = await _context.Articles
+                .Include(a => a.Author)
+                .Include(a => a.Category)
                 .Where(a => a.IsPublished)
                 .OrderByDescending(a => a.PublishedAt)
                 .Take(5)
                 .ToListAsync();
+
+            var latestArticleViewModels = latestArticles.Select(a => new ArticleViewModel
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Content = a.Content,
+                CoverImageUrl = a.CoverImageUrl,
+                PublishedAt = a.PublishedAt ?? DateTime.MinValue,
+                UpdatedAt = a.UpdatedAt,
+                IsPublished = a.IsPublished,
+                AuthorId = a.AuthorId,
+                AuthorName = a.Author != null ? $"{a.Author.FirstName} {a.Author.LastName}" : "Unknown",
+                Images = new List<ArticleImageViewModel>(), // Add if you want images
+                Comments = new List<ArticleCommentViewModel>(), // Add if you want comments
+                IsAdmin = currentUser.IsAdmin,
+                CategoryId = a.CategoryId,
+                CategoryName = a.Category?.Name ?? ""
+            }).ToList();
 
             var viewModel = new MemberDashboardViewModel
             {
@@ -54,7 +75,7 @@ namespace APS.Controllers
                     .OrderByDescending(a => a.CreatedAt)
                     .Take(5)
                     .ToListAsync(),
-                LatestArticles = latestArticles,
+                LatestArticles = latestArticleViewModels,
                 IsAdmin = currentUser.IsAdmin,
                 Role = currentUser.IsAdmin ? "Admin" : (currentUser.IsModerator ? "Moderator" : "User")
             };

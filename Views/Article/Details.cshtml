@@ -2,53 +2,64 @@
 @{
     ViewData["Title"] = Model.Title;
 }
-<div class="modern-article-details-container">
-    <div class="modern-article-details-header">
-        <h1 class="modern-article-details-title">@Model.Title</h1>
-        <div class="modern-article-details-meta">
-            <span><i class="fas fa-user"></i> @Model.AuthorName</span>
-            <span><i class="fas fa-calendar"></i> @Model.PublishedAt.ToString("MMMM dd, yyyy")</span>
-        </div>
-    </div>
-    @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
-    {
-        <div class="modern-article-details-cover">
-            <img src="@Model.CoverImageUrl" alt="@Model.Title" />
-        </div>
-    }
-    <div class="modern-article-details-content">
-        @Html.Raw(Model.Content)
-    </div>
-    @if (Model.IsAdmin)
-    {
-        <div class="mt-4 d-flex gap-2">
-            <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
-                <input type="hidden" name="id" value="@Model.Id" />
-                <button type="submit" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </form>
-        </div>
-    }
-    @if (Model.Images != null && Model.Images.Count > 0)
-    {
-        <div class="modern-article-details-images">
-            <h3>Additional Images</h3>
-            <div class="modern-article-details-images-list">
-                @foreach (var img in Model.Images)
+<div class="article-details-outer" style="display:flex; justify-content:center; margin-top:2.5rem;">
+    <div class="article-details-card" style="background: #181f36; border-radius: 2rem; box-shadow: 0 8px 32px #000a; max-width: 720px; width:100%; overflow: hidden;">
+        @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+        {
+            <div style="position:relative; width:100%; aspect-ratio:16/7; overflow:hidden;">
+                <img src="@Model.CoverImageUrl" alt="@Model.Title" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                @if (!string.IsNullOrEmpty(Model.CategoryName))
                 {
-                    <div class="modern-article-details-image-item">
-                        <img src="@img.ImageUrl" alt="@img.Caption" />
-                        <div class="modern-article-details-image-caption">@img.Caption</div>
+                    <span style="position:absolute; left:2rem; bottom:1.2rem; background:#ffc107; color:#232b36; font-weight:700; font-size:1rem; border-radius:999px; padding:0.3em 1.2em; box-shadow:0 2px 8px #0003; letter-spacing:0.5px;">@Model.CategoryName.ToUpper()</span>
+                }
+            </div>
+        }
+        <div style="padding:2.5rem 2.2rem 2rem 2.2rem;">
+            <h1 style="font-size:2.2rem; font-weight:800; color:#00cfff; margin-bottom:1.1rem; line-height:1.15;">@Model.Title</h1>
+            <div style="display:flex; align-items:center; gap:1.5rem; color:#b0b8c1; font-size:1.08rem; margin-bottom:1.5rem;">
+                <span><i class="fas fa-user"></i> @Model.AuthorName</span>
+                <span><i class="fas fa-calendar"></i> @Model.PublishedAt.ToString("MMMM dd, yyyy")</span>
+            </div>
+            <div class="article-content-rich" style="color:#e0e6ed; font-size:1.18rem; line-height:1.7; margin-bottom:2.2rem;">
+                @Html.Raw(Model.Content)
+            </div>
+            @if (Model.Images != null && Model.Images.Count > 0)
+            {
+                <div style="margin-bottom:2rem;">
+                    <h3 style="color:#00cfff; font-size:1.15rem; font-weight:700; margin-bottom:0.7rem;">Galerie foto</h3>
+                    <div style="display:flex; flex-wrap:wrap; gap:1.2rem;">
+                        @foreach (var img in Model.Images)
+                        {
+                            <div style="flex:1 1 180px; max-width:220px; background:#232b36; border-radius:1rem; overflow:hidden;">
+                                <img src="@img.ImageUrl" alt="@img.Caption" style="width:100%; object-fit:cover; display:block;" />
+                                @if (!string.IsNullOrEmpty(img.Caption))
+                                {
+                                    <div style="padding:0.5rem 1rem; color:#b0b8c1; font-size:0.98rem;">@img.Caption</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2.5rem;">
+                <a href="@Url.Action("Index")" class="modern-btn modern-btn-secondary"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+                @if (Model.IsAdmin)
+                {
+                    <div class="d-flex gap-2">
+                        <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
                     </div>
                 }
             </div>
         </div>
-    }
-    <a href="@Url.Action("Index")" class="modern-btn modern-btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Back to Articles</a>
+    </div>
 </div>
 
 @section Styles {

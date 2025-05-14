@@ -95,17 +95,29 @@
                             @foreach (var article in Model.LatestArticles)
                             {
                                 <div class="col-md-4">
-                                    <div class="announcement-card bg-dark text-light p-3 rounded h-100">
+                                    <div class="modern-article-card" style="background: #181f36; border-radius: 2rem; box-shadow: 0 8px 32px #000a; max-width: 420px; min-width: 320px; margin: 0 0 2rem 0; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
                                         @if (!string.IsNullOrEmpty(article.CoverImageUrl))
                                         {
-                                            <div style="width:100%;">
-                                                <img src="@article.CoverImageUrl" alt="@article.Title" style="width:100%; height:180px; object-fit:cover; border-radius:0.5rem 0.5rem 0 0; margin-bottom:1rem; display:block;" />
+                                            <div style="position:relative; width:100%; aspect-ratio:16/9; overflow:hidden;">
+                                                <img src="@article.CoverImageUrl" alt="@article.Title" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                                                @if (!string.IsNullOrEmpty(article.CategoryName))
+                                                {
+                                                    <span style="position:absolute; left:1.5rem; bottom:1.1rem; background:#ffc107; color:#232b36; font-weight:700; font-size:0.98rem; border-radius:999px; padding:0.22em 1.1em; box-shadow:0 2px 8px #0003; letter-spacing:0.5px;">@article.CategoryName.ToUpper()</span>
+                                                }
                                             </div>
                                         }
-                                        <h6 class="fw-bold">@article.Title</h6>
-                                        <p class="mb-1">@((article.Content.Length > 100 ? article.Content.Substring(0, 100) + "..." : article.Content))</p>
-                                        <small class="text-muted">@article.PublishedAt?.ToString("dd MMMM yyyy")</small>
-                                        <a href="@Url.Action("Details", "Article", new { id = article.Id })" class="btn btn-info btn-sm mt-2">Citește mai mult</a>
+                                        <div style="padding:2rem 1.5rem 1.5rem 1.5rem; flex: 1 1 auto; display: flex; flex-direction: column;">
+                                            <h6 style="font-size: 1.15rem; font-weight: 800; color: #00cfff; margin-bottom: 0.7rem; text-align: left;">@article.Title</h6>
+                                            <div style="font-size: 0.98rem; color: #b0b8c1; margin-bottom: 0.7rem; display: flex; gap: 1.2rem; align-items: center;">
+                                                <span><i class="fas fa-calendar"></i> @article.PublishedAt.ToString("dd MMMM yyyy")</span>
+                                            </div>
+                                            <div style="color: #e0e6ed; font-size: 1.08rem; margin-bottom: 1.2rem;">
+                                                @((article.Content.Length > 100 ? article.Content.Substring(0, 100) + "..." : article.Content))
+                                            </div>
+                                            <div style="margin-top: auto;">
+                                                <a href="@Url.Action("Details", "Article", new { id = article.Id })" class="btn btn-info btn-sm mt-2">Citește mai mult</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             }
