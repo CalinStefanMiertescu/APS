@@ -8,6 +8,7 @@
         <div class="modern-article-details-meta">
             <span><i class="fas fa-user"></i> @Model.AuthorName</span>
             <span><i class="fas fa-calendar"></i> @Model.PublishedAt.ToString("MMMM dd, yyyy")</span>
+            <span><i class="fas fa-tag"></i> @Model.CategoryName</span>
         </div>
     </div>
     @if (!string.IsNullOrEmpty(Model.CoverImageUrl))

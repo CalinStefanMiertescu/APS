@@ -23,6 +23,7 @@ namespace APS.Models.ViewModels
         public bool IsPublished { get; set; }
         public string AuthorId { get; set; }
         public string AuthorName { get; set; }
+        public string CategoryName { get; set; }
         public List<ArticleImageViewModel> Images { get; set; } = new List<ArticleImageViewModel>();
         public List<ArticleCommentViewModel> Comments { get; set; } = new List<ArticleCommentViewModel>();
     }
@@ -56,6 +57,11 @@ namespace APS.Models.ViewModels
         public IFormFile CoverImage { get; set; }
         public List<IFormFile> AdditionalImages { get; set; } = new List<IFormFile>();
         public List<string> ImageCaptions { get; set; } = new List<string>();
+
+        [Required]
+        public int CategoryId { get; set; } // Selected category
+
+        public List<Category> Categories { get; set; } = new();
     }
 
     public class EditArticleViewModel
@@ -68,6 +74,10 @@ namespace APS.Models.ViewModels
 
         [Required]
         public string Content { get; set; }
+
+        public int CategoryId { get; set; } // Selected category
+
+        public List<Category> Categories { get; set; } = new();
 
         public string CurrentCoverImageUrl { get; set; }
         public IFormFile NewCoverImage { get; set; }

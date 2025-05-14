@@ -144,64 +144,7 @@
                 </table>
             </div>
         </div>
-        <!-- Manage Types -->
-        <div class="modern-admin-card glass-card">
-            <h2 class="modern-card-title">Manage Types</h2>
-            <div class="modern-type-management">
-                <div class="modern-type-section">
-                    <h3>Journalist Types</h3>
-                    <div class="modern-type-list">
-                        @foreach (var type in Model.JournalistTypes)
-                        {
-                            <div class="modern-type-item">
-                                <span>@type</span>
-                                <form method="post" action="/Admin/DeleteType" style="display:inline;">
-                                    <input type="hidden" name="type" value="journalist" />
-                                    <input type="hidden" name="value" value="@type" />
-                                    <button type="submit" class="modern-btn modern-btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this journalist type?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        }
-                    </div>
-                    <form method="post" action="/Admin/AddType" class="modern-add-type">
-                        <input type="hidden" name="type" value="journalist" />
-                        <input type="text" name="value" class="modern-form-control" placeholder="New type" required />
-                        <button type="submit" class="modern-btn modern-btn-primary">
-                            <i class="fas fa-plus"></i> Add
-                        </button>
-                    </form>
-                </div>
-                <div class="modern-type-section">
-                    <h3>Publications</h3>
-                    <div class="modern-type-list">
-                        @foreach (var pub in Model.Publications)
-                        {
-                            <div class="modern-type-item">
-                                <span>@pub</span>
-                                <form method="post" action="/Admin/DeleteType" style="display:inline;">
-                                    <input type="hidden" name="type" value="publication" />
-                                    <input type="hidden" name="value" value="@pub" />
-                                    <button type="submit" class="modern-btn modern-btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this publication?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        }
-                    </div>
-                    <form method="post" action="/Admin/AddType" class="modern-add-type">
-                        <input type="hidden" name="type" value="publication" />
-                        <input type="text" name="value" class="modern-form-control" placeholder="New publication" required />
-                        <button type="submit" class="modern-btn modern-btn-primary">
-                            <i class="fas fa-plus"></i> Add
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        
 
         <!-- Active Members -->
         <div class="modern-admin-card glass-card">

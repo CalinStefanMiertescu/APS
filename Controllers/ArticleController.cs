@@ -25,11 +25,18 @@ namespace APS.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            bool isAdmin = currentUser?.IsAdmin ?? false;
+            bool isModerator = currentUser?.IsModerator ?? false;
+
             var articles = await _context.Articles
                 .Include(a => a.Author)
                 .Include(a => a.Images)
                 .Include(a => a.Comments)
-                .Where(a => a.IsPublished || (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator"))))
+                .Include(a => a.Category)
+                .Where(a => a.IsPublished || (User.Identity.IsAuthenticated && (isAdmin || isModerator)))
                 .OrderByDescending(a => a.PublishedAt)
                 .ToListAsync();
 
@@ -46,6 +53,7 @@ namespace APS.Controllers
                     IsPublished = a.IsPublished,
                     AuthorId = a.AuthorId,
                     AuthorName = a.Author != null ? $"{a.Author.FirstName} {a.Author.LastName}" : "Unknown",
+                    CategoryName = a.Category != null ? a.Category.Name : "",
                     Images = a.Images?.Select(i => new ArticleImageViewModel
                     {
                         Id = i.Id,
@@ -54,7 +62,7 @@ namespace APS.Controllers
                         DisplayOrder = i.DisplayOrder
                     }).ToList() ?? new List<ArticleImageViewModel>(),
                     Comments = a.Comments
-                        .Where(c => c.IsApproved || (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Moderator"))))
+                        .Where(c => c.IsApproved || (User.Identity.IsAuthenticated && (isAdmin || isModerator)))
                         .Select(c => new ArticleCommentViewModel
                         {
                             Id = c.Id,
@@ -64,17 +72,24 @@ namespace APS.Controllers
                             IsApproved = c.IsApproved
                         }).ToList()
                 }).ToList(),
-                IsAdmin = User.IsInRole("Admin"),
-                IsModerator = User.IsInRole("Moderator")
+                IsAdmin = isAdmin,
+                IsModerator = isModerator
             };
 
             return View(viewModel);
         }
 
+
+
         [Authorize(Policy = "RequireAdmin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View(new CreateArticleViewModel());
+            var categories = await _context.Categories.ToListAsync();
+            var model = new CreateArticleViewModel
+            {
+                Categories = categories
+            };
+            return View(model);
         }
 
         [HttpPost]
@@ -83,13 +98,7 @@ namespace APS.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
-            }
-
-            var defaultCategory = await _context.Categories.FirstOrDefaultAsync();
-            if (defaultCategory == null)
-            {
-                ModelState.AddModelError(string.Empty, "No categories exist in the system. Please add one in the database.");
+                model.Categories = await _context.Categories.ToListAsync(); // reload for redisplay
                 return View(model);
             }
 
@@ -98,7 +107,7 @@ namespace APS.Controllers
                 Title = model.Title,
                 Content = model.Content,
                 AuthorId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-                CategoryId = defaultCategory.Id,
+                CategoryId = model.CategoryId,
                 PublishedAt = DateTime.UtcNow,
                 IsPublished = true // Always publish on creation
             };
@@ -143,16 +152,15 @@ namespace APS.Controllers
                 return NotFound();
             }
 
-            if (!User.IsInRole("Admin") && article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
-            {
-                return Forbid();
-            }
+            var categories = await _context.Categories.ToListAsync();
 
             var viewModel = new EditArticleViewModel
             {
                 Id = article.Id,
                 Title = article.Title,
                 Content = article.Content,
+                CategoryId = article.CategoryId, // Set selected category
+                Categories = categories,         // Populate categories
                 CurrentCoverImageUrl = article.CoverImageUrl,
                 CurrentImages = article.Images.Select(i => new ArticleImageViewModel
                 {
@@ -351,11 +359,14 @@ namespace APS.Controllers
             var article = await _context.Articles
                 .Include(a => a.Author)
                 .Include(a => a.Images)
+                .Include(a => a.Category)
                 .FirstOrDefaultAsync(a => a.Id == id && a.IsPublished);
+
             if (article == null)
             {
                 return NotFound();
             }
+
             var viewModel = new ArticleViewModel
             {
                 Id = article.Id,
@@ -367,6 +378,7 @@ namespace APS.Controllers
                 IsPublished = article.IsPublished,
                 AuthorId = article.AuthorId,
                 AuthorName = article.Author != null ? $"{article.Author.FirstName} {article.Author.LastName}" : "Unknown",
+                CategoryName = article.Category != null ? article.Category.Name : "",
                 Images = article.Images?.Select(i => new ArticleImageViewModel
                 {
                     Id = i.Id,
@@ -376,8 +388,10 @@ namespace APS.Controllers
                 }).ToList() ?? new List<ArticleImageViewModel>(),
                 Comments = new List<ArticleCommentViewModel>()
             };
+
             return View(viewModel);
         }
+
 
         private async Task<string> SaveImage(IFormFile file)
         {
