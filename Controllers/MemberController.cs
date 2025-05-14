@@ -10,6 +10,8 @@ using APS.Data;
 using System.Text.Json;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Stripe;
+using Stripe.Checkout;
 
 namespace APS.Controllers
 {
@@ -142,8 +144,25 @@ namespace APS.Controllers
 
             if (changes.Any())
             {
-                user.HasPendingChanges = true;
-                user.PendingChangesJson = JsonSerializer.Serialize(changes);
+                if (user.IsAdmin)
+                {
+                    // Apply changes immediately for admins
+                    foreach (var change in changes)
+                    {
+                        var property = typeof(User).GetProperty(change.Key);
+                        if (property != null)
+                        {
+                            property.SetValue(user, Convert.ChangeType(change.Value, property.PropertyType));
+                        }
+                    }
+                    user.HasPendingChanges = false;
+                    user.PendingChangesJson = null;
+                }
+                else
+                {
+                    user.HasPendingChanges = true;
+                    user.PendingChangesJson = JsonSerializer.Serialize(changes);
+                }
                 await _context.SaveChangesAsync();
             }
 
@@ -244,10 +263,27 @@ namespace APS.Controllers
                     return Json(new { success = false, message = "User not found" });
                 }
 
+                // Here you would verify the payment with PayPal API (omitted for brevity)
+                // For now, assume payment is valid if status is COMPLETED
+                if (payment.Status != "COMPLETED")
+                {
+                    return Json(new { success = false, message = "Payment not completed." });
+                }
+
                 // Update user's membership status
                 user.IsPayingMember = true;
                 user.MembershipExpiresAt = DateTime.UtcNow.AddYears(1);
                 user.LastMembershipPayment = DateTime.UtcNow;
+
+                // Create a payment record
+                var paymentRecord = new Payment
+                {
+                    UserId = user.Id,
+                    IsPaid = true,
+                    ExpirationDate = user.MembershipExpiresAt.Value,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _context.Payments.Add(paymentRecord);
 
                 await _context.SaveChangesAsync();
 
@@ -257,6 +293,42 @@ namespace APS.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+
+        [HttpPost]
+        public IActionResult CreateStripeSession()
+        {
+            // Replace with your real Stripe secret key
+            var stripeSecretKey = "sk_test_YOUR_SECRET_KEY";
+            var stripePublicKey = "pk_test_YOUR_PUBLIC_KEY";
+            StripeConfiguration.ApiKey = stripeSecretKey;
+
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = 5000, // 50.00 EUR in cents
+                            Currency = "eur",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "APS Annual Membership"
+                            }
+                        },
+                        Quantity = 1
+                    }
+                },
+                Mode = "payment",
+                SuccessUrl = Url.Action("Index", "Member", null, Request.Scheme) + "?payment=success",
+                CancelUrl = Url.Action("Index", "Member", null, Request.Scheme) + "?payment=cancel"
+            };
+            var service = new SessionService();
+            var session = service.Create(options);
+            return Json(new { sessionId = session.Id, publicKey = stripePublicKey });
         }
 
         public async Task<IActionResult> Profile()

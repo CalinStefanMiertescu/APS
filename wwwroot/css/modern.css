@@ -23,7 +23,7 @@ body, .modern-articles-container, .modern-admin-container, .modern-create-articl
 }
 
 .glass-card {
-    background: var(--modern-glass);
+    background: var(--modern-card-bg);
     border-radius: 24px;
     box-shadow: var(--modern-shadow);
     border: 1.5px solid var(--modern-border);
@@ -312,6 +312,13 @@ body, .modern-articles-container, .modern-admin-container, .modern-create-articl
     border-collapse: separate;
     border-spacing: 0;
 }
+.modern-table th,
+.modern-table td {
+    text-align: center;
+}
+.modern-table td.text-end {
+    text-align: right;
+}
 .modern-table th {
     font-weight: 600;
     color: var(--modern-muted);
@@ -361,6 +368,16 @@ body, .modern-articles-container, .modern-admin-container, .modern-create-articl
 }
 .modern-add-type input {
     flex: 1;
+}
+
+/* Category Management Action Buttons Inline */
+.modern-table .text-end > * {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.3rem;
+}
+.modern-table .text-end > *:last-child {
+    margin-right: 0;
 }
 
 @media (max-width: 900px) {

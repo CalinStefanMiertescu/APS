@@ -100,23 +100,36 @@ namespace APS.Controllers
             var user = await _context.Users.FindAsync(userId);
             if (user == null || string.IsNullOrEmpty(user.PendingChangesJson))
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    return Json(new { success = false, message = "User not found or no pending changes." });
                 return NotFound();
             }
 
-            var changes = JsonSerializer.Deserialize<Dictionary<string, object>>(user.PendingChangesJson);
-            foreach (var change in changes)
+            try
             {
-                var property = typeof(User).GetProperty(change.Key);
-                if (property != null)
+                var changes = JsonSerializer.Deserialize<Dictionary<string, object>>(user.PendingChangesJson);
+                foreach (var change in changes)
                 {
-                    property.SetValue(user, Convert.ChangeType(change.Value, property.PropertyType));
+                    var property = typeof(User).GetProperty(change.Key);
+                    if (property != null)
+                    {
+                        property.SetValue(user, Convert.ChangeType(change.Value, property.PropertyType));
+                    }
                 }
+
+                user.HasPendingChanges = false;
+                user.PendingChangesJson = null;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    return Json(new { success = false, message = "Error approving changes: " + ex.Message });
+                throw;
             }
 
-            user.HasPendingChanges = false;
-            user.PendingChangesJson = null;
-            await _context.SaveChangesAsync();
-
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return Json(new { success = true });
             return RedirectToAction(nameof(Index));
         }
 

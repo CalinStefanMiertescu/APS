@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "n+j0JBwGu3M=",
+  "dgSpecHash": "ryFcF9sg+ww=",
   "success": true,
   "projectFilePath": "E:\\APS\\APS.csproj",
   "expectedPackageFiles": [
@@ -130,6 +130,7 @@
     "C:\\Users\\mierm\\.nuget\\packages\\nuget.projectmodel\\6.11.0\\nuget.projectmodel.6.11.0.nupkg.sha512",
     "C:\\Users\\mierm\\.nuget\\packages\\nuget.protocol\\6.11.0\\nuget.protocol.6.11.0.nupkg.sha512",
     "C:\\Users\\mierm\\.nuget\\packages\\nuget.versioning\\6.11.0\\nuget.versioning.6.11.0.nupkg.sha512",
+    "C:\\Users\\mierm\\.nuget\\packages\\stripe.net\\48.1.0\\stripe.net.48.1.0.nupkg.sha512",
     "C:\\Users\\mierm\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\mierm\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\mierm\\.nuget\\packages\\system.collections.immutable\\8.0.0\\system.collections.immutable.8.0.0.nupkg.sha512",

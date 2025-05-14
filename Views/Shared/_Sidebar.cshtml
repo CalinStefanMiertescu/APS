@@ -120,6 +120,11 @@
                     <span>Log Out</span>
                 </button>
             </form>
+            @if (Model?.IsPayingMember != true)
+            {
+                <div id="paypal-button-container" class="mt-3"></div>
+                <button id="stripe-button" class="btn btn-primary mt-2 w-100">Pay with Stripe</button>
+            }
         </div>
     </div>
 }
@@ -171,7 +176,6 @@
                                         <i class="fas fa-exclamation-circle"></i> Not a Member
                                         <p class="mb-0">Become a member to access exclusive content and features!</p>
                                     </div>
-                                    <div id="paypal-button-container" class="mt-3"></div>
                                 }
                             </div>
                         </div>
@@ -211,6 +215,7 @@
 
 @section Scripts {
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
         paypal.Buttons({
             createOrder: function(data, actions) {
@@ -225,7 +230,6 @@
             },
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
-                    // Send payment details to server
                     fetch('/Member/ProcessPayment', {
                         method: 'POST',
                         headers: {
@@ -240,13 +244,28 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Refresh the page or update UI
                             window.location.reload();
                         }
                     });
                 });
             }
         }).render('#paypal-button-container');
+
+        document.getElementById('stripe-button')?.addEventListener('click', function() {
+            fetch('/Member/CreateStripeSession', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sessionId) {
+                    var stripe = Stripe(data.publicKey);
+                    stripe.redirectToCheckout({ sessionId: data.sessionId });
+                } else {
+                    alert('Stripe session creation failed.');
+                }
+            });
+        });
     </script>
 }
 
