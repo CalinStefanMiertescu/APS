@@ -37,6 +37,8 @@ namespace APS.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            var isActiveMember = currentUser.MembershipExpiresAt.HasValue && currentUser.MembershipExpiresAt.Value > DateTime.UtcNow;
+
             var viewModel = new MemberDashboardViewModel
             {
                 FirstName = currentUser.FirstName,
@@ -46,7 +48,7 @@ namespace APS.Controllers
                 City = currentUser.City,
                 JournalistType = currentUser.JournalistType,
                 Publication = currentUser.Publication,
-                IsPayingMember = currentUser.IsPayingMember,
+                IsPayingMember = isActiveMember,
                 MembershipExpiresAt = currentUser.MembershipExpiresAt,
                 HasPendingChanges = currentUser.HasPendingChanges,
                 AvailableJournalistTypes = await _context.Users
@@ -271,10 +273,18 @@ namespace APS.Controllers
                 }
 
                 // Update user's membership status
-                user.IsPayingMember = true;
                 user.MembershipExpiresAt = user.MembershipExpiresAt?.AddYears(payment.Duration) ?? DateTime.UtcNow.AddYears(payment.Duration);
                 user.LastMembershipPayment = DateTime.UtcNow;
                 user.AutoRenew = payment.AutoRenew;
+                // Ensure IsPayingMember is true if membership is valid
+                if (user.MembershipExpiresAt > DateTime.UtcNow)
+                {
+                    user.IsPayingMember = true;
+                }
+                else
+                {
+                    user.IsPayingMember = false;
+                }
 
                 // Create a payment record
                 var paymentRecord = new Payment
@@ -343,6 +353,8 @@ namespace APS.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            var isActiveMember = currentUser.MembershipExpiresAt.HasValue && currentUser.MembershipExpiresAt.Value > DateTime.UtcNow;
+
             var viewModel = new MemberDashboardViewModel
             {
                 FirstName = currentUser.FirstName,
@@ -352,7 +364,7 @@ namespace APS.Controllers
                 City = currentUser.City,
                 JournalistType = currentUser.JournalistType,
                 Publication = currentUser.Publication,
-                IsPayingMember = currentUser.IsPayingMember,
+                IsPayingMember = isActiveMember,
                 MembershipExpiresAt = currentUser.MembershipExpiresAt,
                 HasPendingChanges = currentUser.HasPendingChanges,
                 AvailableJournalistTypes = await _context.Users

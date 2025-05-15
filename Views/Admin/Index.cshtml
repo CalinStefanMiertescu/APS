@@ -386,8 +386,62 @@
     </div>
 </div>
 
+<!-- Renew Membership Modal -->
+<div class="modal fade" id="renewMembershipModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Reînnoiește abonamentul</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="renewMembershipForm">
+          <div class="form-group mb-3">
+            <label>Durata abonamentului</label>
+            <select class="form-select" name="duration">
+              <option value="1">1 an</option>
+              <option value="2">2 ani</option>
+              <option value="3">3 ani</option>
+            </select>
+          </div>
+          <div id="paypal-button-container" class="mt-3"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-
+@* Add Audit Log Table *@
+@if (Model.AuditLogs != null && Model.AuditLogs.Any())
+{
+    <div class="modern-admin-card mt-4">
+        <h2 class="modern-card-title">Istoric Acțiuni Admin</h2>
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Admin</th>
+                        <th>Acțiune</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model.AuditLogs)
+                    {
+                        <tr>
+                            <td>@log.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@(log.User?.Email ?? log.UserId)</td>
+                            <td>@log.Action</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
 
 @section Scripts {
     <script>
@@ -471,6 +525,44 @@
             $('#editCategoryName').val(name);
             
         }
+    </script>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
+    <script>
+    function renderPayButton() {
+        $('#paypal-button-container').empty();
+        if (typeof paypal !== 'undefined') {
+            paypal.Buttons({
+                style: {
+                    label: 'pay',
+                    layout: 'vertical',
+                    color: 'gold',
+                    shape: 'rect',
+                    tagline: false,
+                    height: 45
+                },
+                createOrder: function(data, actions) {
+                    const form = document.getElementById('renewMembershipForm');
+                    const duration = form.querySelector('select[name="duration"]').value;
+                    const amount = (50 * duration).toFixed(2); // 50 EUR per year
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: { value: amount },
+                            description: `Abonament APS - ${duration} ${duration === '1' ? 'an' : 'ani'}`
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert('Plata a fost efectuată cu succes! Abonamentul a fost reînnoit.');
+                        $('#renewMembershipModal').modal('hide');
+                    });
+                }
+            }).render('#paypal-button-container');
+        }
+    }
+    $('#renewMembershipModal').on('shown.bs.modal', function () {
+        renderPayButton();
+    });
     </script>
 }
 

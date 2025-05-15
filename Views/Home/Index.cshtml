@@ -136,29 +136,29 @@
 <div class="modal fade" id="extendMembershipModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-                <h5 class="modal-title">Reînnoiește abonamentul</h5>
+            <div class="modal-header" style="background: linear-gradient(90deg, #1de9b6 0%, #1dc8e9 100%); border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                <h5 class="modal-title text-white fw-bold">Prelungire Abonament</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="extendMembershipForm">
                     <div class="form-group mb-3">
-                        <label>Durata abonamentului</label>
+                        <label class="form-label text-info fw-bold">Durată</label>
                         <select class="form-select" name="duration">
-                            <option value="1">1 an</option>
-                            <option value="2">2 ani</option>
-                            <option value="3">3 ani</option>
+                            <option value="1">1 An</option>
+                            <option value="2">2 Ani</option>
+                            <option value="3">3 Ani</option>
                         </select>
                     </div>
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="autoRenew" name="autoRenew">
                         <label class="form-check-label" for="autoRenew">Activează reînnoirea automată</label>
                     </div>
-                    <div id="paypal-button-container" class="mt-3"></div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Renunță</button>
+                        <button type="button" class="btn btn-info px-4 text-white fw-bold" id="confirmPaymentBtn">Continuă la Plată</button>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Renunță</button>
             </div>
         </div>
     </div>
@@ -172,100 +172,38 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
     <script>
-        function renderPayButton() {
-            // Remove any existing PayPal button to avoid duplicates
-            $('#paypal-button-container').empty();
-
-            if (typeof paypal !== 'undefined') {
-                paypal.Buttons({
-                    style: {
-                        label: 'pay',
-                        layout: 'vertical',
-                        color: 'gold',
-                        shape: 'rect',
-                        tagline: false,
-                        height: 45
-                    },
-                    createOrder: function(data, actions) {
-                        const form = document.getElementById('extendMembershipForm');
-                        const duration = form.querySelector('select[name="duration"]').value;
-                        const amount = (50 * duration).toFixed(2); // 50 EUR per year
-
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: amount
-                                },
-                                description: `Abonament APS - ${duration} ${duration === '1' ? 'an' : 'ani'}`
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            const form = document.getElementById('extendMembershipForm');
-                            const duration = form.querySelector('select[name="duration"]').value;
-                            const autoRenew = form.querySelector('input[name="autoRenew"]').checked;
-
-                            fetch('/Member/ProcessPayment', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    orderId: details.id,
-                                    paymentId: details.purchase_units[0].payments.captures[0].id,
-                                    status: details.status,
-                                    duration: parseInt(duration),
-                                    autoRenew: autoRenew
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    window.location.reload();
-                                } else {
-                                    alert('A apărut o eroare la procesarea plății: ' + data.message);
-                                }
-                            })
-                            .catch(error => {
-                                alert('A apărut o eroare la procesarea plății.');
-                            });
-                        });
-                    }
-                }).render('#paypal-button-container');
-            }
-        }
-
-        // Render PayPal button when modal is shown
-        $('#extendMembershipModal').on('shown.bs.modal', function () {
-            renderPayButton();
-        });
-
-        // Optionally, render on page load if modal is already open
         $(document).ready(function() {
-            if ($('#extendMembershipModal').hasClass('show')) {
-                renderPayButton();
-            }
+            $('#confirmPaymentBtn').on('click', function() {
+                const form = document.getElementById('extendMembershipForm');
+                const duration = form.querySelector('select[name="duration"]').value;
+                const autoRenew = form.querySelector('input[name="autoRenew"]').checked;
+
+                $.ajax({
+                    url: '/Member/ProcessPayment',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        orderId: 'manual',
+                        paymentId: 'manual',
+                        status: 'COMPLETED',
+                        duration: parseInt(duration),
+                        autoRenew: autoRenew
+                    }),
+                    success: function(data) {
+                        if (data.success) {
+                            alert('Plata a fost efectuată cu succes! Abonamentul a fost reînnoit.');
+                            $('#extendMembershipModal').modal('hide');
+                            window.location.reload();
+                        } else {
+                            alert('A apărut o eroare la procesarea plății: ' + data.message);
+                        }
+                    },
+                    error: function() {
+                        alert('A apărut o eroare la procesarea plății.');
+                    }
+                });
+            });
         });
     </script>
-    <style>
-        #paypal-button-container .paypal-button-text:after {
-            content: 'Plătește';
-            display: block;
-            position: absolute;
-            left: 0; right: 0; top: 0; bottom: 0;
-            color: #111;
-            background: transparent;
-            z-index: 2;
-            font-size: 1.1rem !important;
-            font-weight: bold !important;
-            text-align: center;
-            line-height: 45px;
-        }
-        #paypal-button-container .paypal-button-text > span {
-            opacity: 0 !important;
-        }
-    </style>
 }

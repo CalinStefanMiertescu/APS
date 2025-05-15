@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\APS\\APS.csproj": {}
+    "D:\\APS\\APS.csproj": {}
   },
   "projects": {
-    "E:\\APS\\APS.csproj": {
+    "D:\\APS\\APS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\APS\\APS.csproj",
+        "projectUniqueName": "D:\\APS\\APS.csproj",
         "projectName": "APS",
-        "projectPath": "E:\\APS\\APS.csproj",
+        "projectPath": "D:\\APS\\APS.csproj",
         "packagesPath": "C:\\Users\\mierm\\.nuget\\packages\\",
-        "outputPath": "E:\\APS\\obj\\",
+        "outputPath": "D:\\APS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -96,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300-preview.0.25177.5/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -15,7 +15,7 @@
                 <div class="d-flex flex-column align-items-center justify-content-center" style="min-width:240px;">
                     <form id="profilePicForm" enctype="multipart/form-data">
                         <div class="profile-pic-upload" style="position:relative; display:inline-block;">
-                            <img id="mainProfilePic" src="@(Model.ProfilePictureUrl ?? Url.Content("~/images/profile-placeholder.png"))" class="profile-pic mb-3" style="width:160px; height:160px; border-radius:50%; object-fit:cover; background:#00cfff; border:6px solid #00cfff; box-shadow:0 0 24px #00cfff80,0 0 0 8px #232b36; transition:box-shadow 0.3s;" />
+                            <img id="mainProfilePic" src="@(Model?.ProfilePictureUrl ?? "/images/profile-placeholder.jpg")" class="profile-pic mb-3" style="width:160px; height:160px; border-radius:50%; object-fit:cover; background:#00cfff; border:6px solid #00cfff; box-shadow:0 0 24px #00cfff80,0 0 0 8px #232b36; transition:box-shadow 0.3s;" />
                             <label for="profilePicInput" class="profile-pic-camera-btn">
                                 <i class="fas fa-camera"></i>
                             </label>

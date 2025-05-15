@@ -9,6 +9,7 @@ using APS.Models.ViewModels;
 using APS.Data;
 using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace APS.Controllers
 {
@@ -62,6 +63,11 @@ namespace APS.Controllers
                  // Add this to include categories
                 Categories = await _context.Categories
                     .Include(c => c.Articles)
+                    .ToListAsync(),
+                AuditLogs = await _context.Audit_Logs
+                    .Include(a => a.User)
+                    .OrderByDescending(a => a.CreatedAt)
+                    .Take(20)
                     .ToListAsync()
             };
 
@@ -79,6 +85,14 @@ namespace APS.Controllers
             user.IsActive = true;
             user.IsPayingMember = false;
             await _context.SaveChangesAsync();
+            // Audit log
+            var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            _context.Audit_Logs.Add(new Audit_Log {
+                UserId = adminId,
+                Action = $"Approved user {user.Email} ({user.Id})",
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -95,7 +109,14 @@ namespace APS.Controllers
             user.RejectedAt = DateTime.UtcNow;
             user.RejectionReason = reason;
             await _context.SaveChangesAsync();
-
+            // Audit log
+            var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            _context.Audit_Logs.Add(new Audit_Log {
+                UserId = adminId,
+                Action = $"Rejected user {user.Email} ({user.Id}) Reason: {reason}",
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -153,6 +174,14 @@ namespace APS.Controllers
                 user.PendingChangesJson = null;
                 await _context.SaveChangesAsync();
                 TempData["AdminMessage"] = "User changes approved.";
+                // Audit log
+                var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                _context.Audit_Logs.Add(new Audit_Log {
+                    UserId = adminId,
+                    Action = $"Approved changes for user {user.Email} ({user.Id})",
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -183,6 +212,14 @@ namespace APS.Controllers
             user.PendingChangesJson = null;
             await _context.SaveChangesAsync();
             TempData["AdminMessage"] = "User changes rejected.";
+            // Audit log
+            var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            _context.Audit_Logs.Add(new Audit_Log {
+                UserId = adminId,
+                Action = $"Rejected changes for user {user.Email} ({user.Id})",
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 return Json(new { success = true });
@@ -248,6 +285,14 @@ namespace APS.Controllers
             }
             user.IsActive = false;
             await _context.SaveChangesAsync();
+            // Audit log
+            var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            _context.Audit_Logs.Add(new Audit_Log {
+                UserId = adminId,
+                Action = $"Inactivated member {user.Email} ({user.Id})",
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -263,6 +308,14 @@ namespace APS.Controllers
             user.IsPayingMember = true;
             if (until.HasValue)
                 user.MembershipExpiresAt = until;
+            await _context.SaveChangesAsync();
+            // Audit log
+            var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            _context.Audit_Logs.Add(new Audit_Log {
+                UserId = adminId,
+                Action = $"Activated member {user.Email} ({user.Id}) until {until}",
+                CreatedAt = DateTime.UtcNow
+            });
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -380,6 +433,14 @@ namespace APS.Controllers
 
             await _context.SaveChangesAsync();
             TempData["AdminMessage"] = $"Role updated to {role} for {user.FirstName} {user.LastName}.";
+            // Audit log
+            var adminId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            _context.Audit_Logs.Add(new Audit_Log {
+                UserId = adminId,
+                Action = $"Set role to {role} for user {user.Email} ({user.Id})",
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }
