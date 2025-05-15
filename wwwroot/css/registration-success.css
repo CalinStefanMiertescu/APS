@@ -25,6 +25,8 @@
     position: relative;
     z-index: 1;
     text-align: center;
+    background: #1a2332;
+    color: #e0e6ed;
 }
 
 .success-card::before {
@@ -51,7 +53,8 @@
     margin-bottom: 2rem;
     background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color: #fff;
+    color: #fff;
     text-shadow: 0 0 20px rgba(235, 75, 152, 0.3);
 }
 
@@ -59,7 +62,7 @@
     font-size: 1.1rem;
     line-height: 1.8;
     margin-bottom: 2rem;
-    color: var(--text-light);
+    color: #e0e6ed;
 }
 
 .success-icon {

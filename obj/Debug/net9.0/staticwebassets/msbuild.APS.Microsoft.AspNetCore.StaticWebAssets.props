@@ -174,8 +174,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>pir7dv244u</Fingerprint>
-      <Integrity>EbBfOtcfh/5bC+xw2CgnmBOnhef8XrwHXUTnonKAaas=</Integrity>
+      <Fingerprint>7i3xi5um34</Fingerprint>
+      <Integrity>AYr12xwSHPnQfTU3+Lus3lxkmSm6/lbk9mqhFWeD0J8=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\registration-success.css'))</OriginalItemSpec>
