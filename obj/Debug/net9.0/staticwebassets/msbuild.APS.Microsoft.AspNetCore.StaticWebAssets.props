@@ -1440,12 +1440,30 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\2d235f44-7402-4cdf-a5ba-b81dd3c7212d_APS-Comunicat.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\68f09da7-d067-45dc-a11b-c4bce2dc9f5c_Imagine1.jpg'))">
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\7fcf663d-91d7-4299-a41c-b8f2856b110b_1348853.png'))">
       <SourceType>Package</SourceType>
       <SourceId>APS</SourceId>
       <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
       <BasePath>_content/APS</BasePath>
-      <RelativePath>uploads/68f09da7-d067-45dc-a11b-c4bce2dc9f5c_Imagine1.jpg</RelativePath>
+      <RelativePath>uploads/7fcf663d-91d7-4299-a41c-b8f2856b110b_1348853.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>91vv96njtg</Fingerprint>
+      <Integrity>I6DsJ4YIvwucshD4aGRp5iu3UNgPHIKmi96hZi4IMA4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\7fcf663d-91d7-4299-a41c-b8f2856b110b_1348853.png'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\9000e1da-a068-4567-920c-96b2bdd53145_Imagine1.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>APS</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/APS</BasePath>
+      <RelativePath>uploads/9000e1da-a068-4567-920c-96b2bdd53145_Imagine1.jpg</RelativePath>
       <AssetKind>All</AssetKind>
       <AssetMode>All</AssetMode>
       <AssetRole>Primary</AssetRole>
@@ -1456,7 +1474,7 @@
       <Integrity>KoBIg3YfSYbQI7WRpvhxlJGiJ8fP7i9jSC2iglmS0qM=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\68f09da7-d067-45dc-a11b-c4bce2dc9f5c_Imagine1.jpg'))</OriginalItemSpec>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\9000e1da-a068-4567-920c-96b2bdd53145_Imagine1.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\941f64cf-76ba-4bdd-9fad-daea03326ef9_AW7I0014 (2).JPG'))">
       <SourceType>Package</SourceType>
@@ -1530,6 +1548,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\c273e2a0-72aa-4d05-bf5d-847f5c62f17e_Lupta-pentru-1salvare.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\c385dd11-ae7d-433f-9acf-0d82ab155e7f_1348853.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>APS</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/APS</BasePath>
+      <RelativePath>uploads/c385dd11-ae7d-433f-9acf-0d82ab155e7f_1348853.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>91vv96njtg</Fingerprint>
+      <Integrity>I6DsJ4YIvwucshD4aGRp5iu3UNgPHIKmi96hZi4IMA4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\c385dd11-ae7d-433f-9acf-0d82ab155e7f_1348853.png'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\e76c44fa-cdbb-41a1-9e7b-79081e53da9b_AW7I0020.JPG'))">
       <SourceType>Package</SourceType>
       <SourceId>APS</SourceId>
@@ -1601,6 +1637,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-pictures\5162a3bf-636e-4622-8865-b47cdabce90b_638828858394450187.png'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-pictures\5162a3bf-636e-4622-8865-b47cdabce90b_638828947613056996.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>APS</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/APS</BasePath>
+      <RelativePath>uploads/profile-pictures/5162a3bf-636e-4622-8865-b47cdabce90b_638828947613056996.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>i5p2gtrdn4</Fingerprint>
+      <Integrity>KoBIg3YfSYbQI7WRpvhxlJGiJ8fP7i9jSC2iglmS0qM=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-pictures\5162a3bf-636e-4622-8865-b47cdabce90b_638828947613056996.jpg'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-pictures\915247bd-76e7-47f6-b7c8-b8b8ce0aa26c_638824987988839668.jpg'))">
       <SourceType>Package</SourceType>
@@ -1763,6 +1817,24 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-pictures\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824294122230676.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-pictures\f5620f03-b729-4106-a604-5281bd7a0fbb_638828952137034063.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>APS</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/APS</BasePath>
+      <RelativePath>uploads/profile-pictures/f5620f03-b729-4106-a604-5281bd7a0fbb_638828952137034063.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>91vv96njtg</Fingerprint>
+      <Integrity>I6DsJ4YIvwucshD4aGRp5iu3UNgPHIKmi96hZi4IMA4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-pictures\f5620f03-b729-4106-a604-5281bd7a0fbb_638828952137034063.png'))</OriginalItemSpec>
     </StaticWebAsset>
   </ItemGroup>
 </Project>

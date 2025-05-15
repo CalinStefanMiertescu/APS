@@ -59,8 +59,6 @@ namespace APS.Models.ViewModels
         public string Content { get; set; }
 
         public IFormFile CoverImage { get; set; }
-        public List<IFormFile> AdditionalImages { get; set; } = new List<IFormFile>();
-        public List<string> ImageCaptions { get; set; } = new List<string>();
 
         [Required]
         public int CategoryId { get; set; } // Selected category
@@ -86,8 +84,6 @@ namespace APS.Models.ViewModels
         public string? CurrentCoverImageUrl { get; set; }
         public IFormFile? NewCoverImage { get; set; }
         public List<ArticleImageViewModel> CurrentImages { get; set; } = new List<ArticleImageViewModel>();
-        public List<IFormFile> NewImages { get; set; } = new List<IFormFile>();
-        public List<string> NewImageCaptions { get; set; } = new List<string>();
     }
 
     public class AddCommentViewModel

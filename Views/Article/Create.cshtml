@@ -37,22 +37,6 @@
             <span asp-validation-for="CoverImage" class="text-danger"></span>
         </div>
 
-        <div class="modern-form-group">
-            <label class="modern-form-label">Poze adiționale</label>
-            <div id="additionalImages">
-                <div class="modern-image-input-group">
-                    <input type="file" name="AdditionalImages" class="modern-form-control" accept="image/*" />
-                    <input type="text" name="ImageCaptions" class="modern-form-control" placeholder="Image caption" />
-                    <button type="button" class="modern-btn modern-btn-danger remove-image">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <button type="button" class="modern-btn modern-btn-secondary" id="addImage">
-                <i class="fas fa-plus"></i> Adaugă Poză
-            </button>
-        </div>
-
         <div class="modern-form-actions">
             <button type="submit" class="modern-btn modern-btn-primary">
                 <i class="fas fa-save"></i> Salvează Anunțul
@@ -67,22 +51,7 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            $('#addImage').click(function() {
-                var imageGroup = `
-                    <div class="modern-image-input-group">
-                        <input type="file" name="AdditionalImages" class="modern-form-control" accept="image/*" />
-                        <input type="text" name="ImageCaptions" class="modern-form-control" placeholder="Image caption" />
-                        <button type="button" class="modern-btn modern-btn-danger remove-image">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
-                $('#additionalImages').append(imageGroup);
-            });
-
-            $(document).on('click', '.remove-image', function() {
-                $(this).closest('.modern-image-input-group').remove();
-            });
+            // No additional JavaScript needed
         });
     </script>
 }
@@ -90,4 +59,26 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/articles.css" />
     <link rel="stylesheet" href="~/css/modern.css" />
+    <style>
+        .modern-form-label[for="CategoryId"], label[for="CategoryId"] {
+            color: #00cfff;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        select.form-control[name="CategoryId"] {
+            background: #232b36;
+            color: #e0e6ed;
+            border: 1px solid #00cfff;
+            border-radius: 0.7rem;
+            padding: 0.7rem 1rem;
+            font-size: 1.08rem;
+            margin-bottom: 1.2rem;
+        }
+        select.form-control[name="CategoryId"]:focus {
+            border-color: #00cfff;
+            box-shadow: 0 0 0 2px #00cfff33;
+        }
+    </style>
 } 

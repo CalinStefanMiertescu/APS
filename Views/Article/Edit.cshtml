@@ -45,33 +45,6 @@
             <input asp-for="NewCoverImage" type="file" class="modern-form-control" accept="image/*" />
             <span asp-validation-for="NewCoverImage" class="text-danger"></span>
         </div>
-        <div class="modern-form-group">
-            <label class="modern-form-label">Poze curente</label>
-            <div class="current-images">
-                @foreach (var image in Model.CurrentImages)
-                {
-                    <div class="current-image">
-                        <img src="@image.ImageUrl" alt="@image.Caption" />
-                        <p class="image-caption">@image.Caption</p>
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="modern-form-group">
-            <label class="modern-form-label">Adaugă mai multe poze</label>
-            <div id="additionalImages">
-                <div class="modern-image-input-group">
-                    <input type="file" name="NewImages" class="modern-form-control" accept="image/*" />
-                    <input type="text" name="NewImageCaptions" class="modern-form-control" placeholder="Image caption" />
-                    <button type="button" class="modern-btn modern-btn-danger remove-image">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <button type="button" class="modern-btn modern-btn-secondary" id="addImage">
-                <i class="fas fa-plus"></i> Adaugă Poză
-            </button>
-        </div>
         <div class="modern-form-actions">
             <button type="submit" class="modern-btn modern-btn-primary">
                 <i class="fas fa-save"></i> Salvează Anunțul
@@ -86,21 +59,7 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            $('#addImage').click(function() {
-                var imageGroup = `
-                    <div class="modern-image-input-group">
-                        <input type="file" name="NewImages" class="modern-form-control" accept="image/*" />
-                        <input type="text" name="NewImageCaptions" class="modern-form-control" placeholder="Image caption" />
-                        <button type="button" class="modern-btn modern-btn-danger remove-image">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
-                $('#additionalImages').append(imageGroup);
-            });
-            $(document).on('click', '.remove-image', function() {
-                $(this).closest('.modern-image-input-group').remove();
-            });
+            // No additional JavaScript needed
         });
     </script>
 }

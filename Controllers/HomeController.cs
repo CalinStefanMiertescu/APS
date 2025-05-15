@@ -97,6 +97,7 @@ namespace APS.Controllers
             // TODO: Implement payment processing
             // For now, just update the membership
             user.IsPayingMember = true;
+            user.IsActive = true;
             user.MembershipExpiresAt = DateTime.UtcNow.AddYears(duration);
             user.LastMembershipPayment = DateTime.UtcNow;
 

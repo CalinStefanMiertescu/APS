@@ -321,8 +321,12 @@
       "PackagePath": "staticwebassets\\uploads\\2d235f44-7402-4cdf-a5ba-b81dd3c7212d_APS-Comunicat.jpg"
     },
     {
-      "Id": "D:\\APS\\wwwroot\\uploads\\68f09da7-d067-45dc-a11b-c4bce2dc9f5c_Imagine1.jpg",
-      "PackagePath": "staticwebassets\\uploads\\68f09da7-d067-45dc-a11b-c4bce2dc9f5c_Imagine1.jpg"
+      "Id": "D:\\APS\\wwwroot\\uploads\\7fcf663d-91d7-4299-a41c-b8f2856b110b_1348853.png",
+      "PackagePath": "staticwebassets\\uploads\\7fcf663d-91d7-4299-a41c-b8f2856b110b_1348853.png"
+    },
+    {
+      "Id": "D:\\APS\\wwwroot\\uploads\\9000e1da-a068-4567-920c-96b2bdd53145_Imagine1.jpg",
+      "PackagePath": "staticwebassets\\uploads\\9000e1da-a068-4567-920c-96b2bdd53145_Imagine1.jpg"
     },
     {
       "Id": "D:\\APS\\wwwroot\\uploads\\941f64cf-76ba-4bdd-9fad-daea03326ef9_AW7I0014 (2).JPG",
@@ -341,6 +345,10 @@
       "PackagePath": "staticwebassets\\uploads\\c273e2a0-72aa-4d05-bf5d-847f5c62f17e_Lupta-pentru-1salvare.jpg"
     },
     {
+      "Id": "D:\\APS\\wwwroot\\uploads\\c385dd11-ae7d-433f-9acf-0d82ab155e7f_1348853.png",
+      "PackagePath": "staticwebassets\\uploads\\c385dd11-ae7d-433f-9acf-0d82ab155e7f_1348853.png"
+    },
+    {
       "Id": "D:\\APS\\wwwroot\\uploads\\e76c44fa-cdbb-41a1-9e7b-79081e53da9b_AW7I0020.JPG",
       "PackagePath": "staticwebassets\\uploads\\e76c44fa-cdbb-41a1-9e7b-79081e53da9b_AW7I0020.JPG"
     },
@@ -355,6 +363,10 @@
     {
       "Id": "D:\\APS\\wwwroot\\uploads\\profile-pictures\\5162a3bf-636e-4622-8865-b47cdabce90b_638828858394450187.png",
       "PackagePath": "staticwebassets\\uploads\\profile-pictures\\5162a3bf-636e-4622-8865-b47cdabce90b_638828858394450187.png"
+    },
+    {
+      "Id": "D:\\APS\\wwwroot\\uploads\\profile-pictures\\5162a3bf-636e-4622-8865-b47cdabce90b_638828947613056996.jpg",
+      "PackagePath": "staticwebassets\\uploads\\profile-pictures\\5162a3bf-636e-4622-8865-b47cdabce90b_638828947613056996.jpg"
     },
     {
       "Id": "D:\\APS\\wwwroot\\uploads\\profile-pictures\\915247bd-76e7-47f6-b7c8-b8b8ce0aa26c_638824987988839668.jpg",
@@ -391,6 +403,10 @@
     {
       "Id": "D:\\APS\\wwwroot\\uploads\\profile-pictures\\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824294122230676.jpg",
       "PackagePath": "staticwebassets\\uploads\\profile-pictures\\a6f2c69a-0afa-417a-ab5a-cb7cfa30feda_638824294122230676.jpg"
+    },
+    {
+      "Id": "D:\\APS\\wwwroot\\uploads\\profile-pictures\\f5620f03-b729-4106-a604-5281bd7a0fbb_638828952137034063.png",
+      "PackagePath": "staticwebassets\\uploads\\profile-pictures\\f5620f03-b729-4106-a604-5281bd7a0fbb_638828952137034063.png"
     },
     {
       "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.APS.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

@@ -119,24 +119,6 @@ namespace APS.Controllers
             _context.Articles.Add(article);
             await _context.SaveChangesAsync();
 
-            // Handle additional images
-            for (int i = 0; i < (model.AdditionalImages?.Count ?? 0); i++)
-            {
-                if (model.AdditionalImages?[i] != null)
-                {
-                    var image = new ArticleImage
-                    {
-                        ArticleId = article.Id,
-                        ImageUrl = await SaveImage(model.AdditionalImages[i]),
-                        Caption = model.ImageCaptions != null && model.ImageCaptions.Count > i ? model.ImageCaptions[i] : string.Empty,
-                        DisplayOrder = i
-                    };
-                    article.Images.Add(image);
-                }
-            }
-
-            await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -205,9 +187,6 @@ namespace APS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Log user roles for debugging
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] User Roles: {string.Join(", ", User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))}");
-
             article.Title = model.Title;
             article.Content = model.Content;
             article.CategoryId = model.CategoryId;
@@ -220,22 +199,6 @@ namespace APS.Controllers
                     DeleteImage(article.CoverImageUrl);
                 }
                 article.CoverImageUrl = await SaveImage(model.NewCoverImage);
-            }
-
-            // Handle new images
-            for (int i = 0; i < (model.NewImages?.Count ?? 0); i++)
-            {
-                if (model.NewImages?[i] != null)
-                {
-                    var image = new ArticleImage
-                    {
-                        ArticleId = article.Id,
-                        ImageUrl = await SaveImage(model.NewImages[i]),
-                        Caption = model.NewImageCaptions != null && model.NewImageCaptions.Count > i ? model.NewImageCaptions[i] : string.Empty,
-                        DisplayOrder = article.Images.Count + i
-                    };
-                    article.Images.Add(image);
-                }
             }
 
             await _context.SaveChangesAsync();

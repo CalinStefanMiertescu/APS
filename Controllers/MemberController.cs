@@ -184,6 +184,7 @@ namespace APS.Controllers
 
             // TODO: Implement payment processing
             user.IsPayingMember = true;
+            user.IsActive = true;
             user.MembershipExpiresAt = DateTime.UtcNow.AddYears(1);
             user.LastMembershipPayment = DateTime.UtcNow;
 
@@ -206,6 +207,8 @@ namespace APS.Controllers
             // TODO: Implement payment processing
             user.MembershipExpiresAt = user.MembershipExpiresAt?.AddYears(duration) ?? DateTime.UtcNow.AddYears(duration);
             user.LastMembershipPayment = DateTime.UtcNow;
+            user.IsActive = true;
+            user.IsPayingMember = true;
 
             await _context.SaveChangesAsync();
 
@@ -244,6 +247,7 @@ namespace APS.Controllers
             // TODO: Implement payment processing for auto-renewal
             // For now, just update the membership
             user.IsPayingMember = true;
+            user.IsActive = true;
             user.MembershipExpiresAt = DateTime.UtcNow.AddYears(1);
             user.LastMembershipPayment = DateTime.UtcNow;
 
@@ -280,10 +284,12 @@ namespace APS.Controllers
                 if (user.MembershipExpiresAt > DateTime.UtcNow)
                 {
                     user.IsPayingMember = true;
+                    user.IsActive = true;
                 }
                 else
                 {
                     user.IsPayingMember = false;
+                    user.IsActive = false;
                 }
 
                 // Create a payment record
