@@ -16,7 +16,7 @@ var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ??
     builder.Configuration.GetConnectionString("DefaultConnection");
 
 // If using Railway's PostgreSQL, convert the connection string
-if (connectionString.StartsWith("postgres://"))
+if (connectionString != null && connectionString.StartsWith("postgres://"))
 {
     connectionString = connectionString.Replace("postgres://", "Host=")
         .Replace("@", ";Username=")
@@ -63,17 +63,23 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+// Configure for GitHub Pages
+app.UsePathBase("/APS");
 app.UseRouting();
+
+// Serve static files
+app.UseStaticFiles(new StaticFileOptions
+{
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/octet-stream"
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Seed admin user
 using (var scope = app.Services.CreateScope())
