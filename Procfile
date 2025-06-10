@@ -1,1 +1,1 @@
-web: dotnet output/APS.dll 
+web: dotnet APS.dll 
