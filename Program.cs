@@ -11,8 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Configure PostgreSQL
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? 
+    builder.Configuration.GetConnectionString("DefaultConnection");
+
+// If using Railway's PostgreSQL, convert the connection string
+if (connectionString.StartsWith("postgres://"))
+{
+    connectionString = connectionString.Replace("postgres://", "Host=")
+        .Replace("@", ";Username=")
+        .Replace(":", ";Password=")
+        .Replace("/", ";Database=");
+}
+
 builder.Services.AddDbContext<APSContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 // Add Identity
 builder.Services.AddIdentity<User, Microsoft.AspNetCore.Identity.IdentityRole>()
@@ -51,12 +64,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
@@ -67,8 +79,18 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    SeedAdminUserAsync(services).GetAwaiter().GetResult();
-    SeedRolesAsync(services).GetAwaiter().GetResult();
+    try
+    {
+        var context = services.GetRequiredService<APSContext>();
+        context.Database.Migrate();
+        SeedAdminUserAsync(services).GetAwaiter().GetResult();
+        SeedRolesAsync(services).GetAwaiter().GetResult();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+    }
 }
 
 app.Run();
@@ -77,8 +99,8 @@ app.Run();
 async Task SeedAdminUserAsync(IServiceProvider services)
 {
     var userManager = services.GetRequiredService<UserManager<User>>();
-    var adminEmail = "123@gmail.com";
-    var adminPassword = "Calin14!";
+    var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? "123@gmail.com";
+    var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "Calin14!";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
     if (adminUser == null)
     {
@@ -89,7 +111,7 @@ async Task SeedAdminUserAsync(IServiceProvider services)
             FirstName = "Calin",
             LastName = "Stefan",
             IsAdmin = true,
-            IsActive = true, // Doar adminul seed e activ automat
+            IsActive = true,
             EmailConfirmed = true,
             City = "Bucuresti",
             Phone = "0700000000",
@@ -97,7 +119,7 @@ async Task SeedAdminUserAsync(IServiceProvider services)
             Publication = "Admin",
             ProfilePictureUrl = string.Empty,
             Biography = string.Empty,
-            DateOfBirth = new DateTime(1990, 1, 1) // Adding default date of birth
+            DateOfBirth = new DateTime(1990, 1, 1)
         };
         await userManager.CreateAsync(adminUser, adminPassword);
     }
